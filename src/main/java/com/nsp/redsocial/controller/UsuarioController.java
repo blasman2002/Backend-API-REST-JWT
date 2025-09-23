@@ -1,8 +1,10 @@
 package com.nsp.redsocial.controller;
 
-import com.nsp.redsocial.model.entity.Usuario;
-import com.nsp.redsocial.service.UsuarioService;
+import com.nsp.redsocial.model.dto.Usuario.UsuarioDto;
+import com.nsp.redsocial.model.dto.Usuario.UsuarioNuevoDto;
+import com.nsp.redsocial.service.usuario.UsuarioService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,26 +18,10 @@ public class UsuarioController {
 
     @PostMapping("usuario")
     @ResponseStatus(HttpStatus.CREATED)
-    public Usuario crear(@RequestBody Usuario usuario) {
-        return usuarioService.save(usuario);
+    public ResponseEntity<UsuarioDto> crear(@RequestBody UsuarioNuevoDto udto) {
+        return ResponseEntity.ok(usuarioService.save(udto));
     }
 
-    @PutMapping("usuario")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Usuario actualizar(@RequestBody Usuario usuario) {
-        return usuarioService.save(usuario);
-    }
 
-    @DeleteMapping("usuario/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void eliminar(@PathVariable Long id) {
-        Usuario u = usuarioService.findById(id);
-        usuarioService.delete(u);
-    }
 
-    @GetMapping("usuario/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Usuario encontrarPorId(@PathVariable Long id) {
-        return usuarioService.findById(id);
-    }
 }

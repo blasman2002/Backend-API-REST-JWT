@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -27,5 +27,5 @@ public class Like {
     private Usuario usuario;
 
     @Column(name = "fecha_like")
-    private Timestamp fechaLike;
+    private LocalDateTime fechaLike;
 }

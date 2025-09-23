@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -27,5 +27,5 @@ public class Estrella {
     private Usuario usuario2;
 
     @Column(name = "fecha_estrella")
-    private Timestamp fechaEstrella;
+    private LocalDateTime fechaEstrella;
 }

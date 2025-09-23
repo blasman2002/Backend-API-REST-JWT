@@ -1,17 +1,17 @@
 package com.nsp.redsocial.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "usuarios")
 public class Usuario {
     @Id
@@ -27,7 +27,12 @@ public class Usuario {
     private String descripcion;
 
     @Column(name = "fecha_creacion")
-    private Timestamp fechaCreacion;
+    private LocalDateTime fechaCreacion;
+
+    @PrePersist
+    protected void onCreate() {
+        fechaCreacion = LocalDateTime.now();
+    }
 
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<Publicacion> publicaciones;

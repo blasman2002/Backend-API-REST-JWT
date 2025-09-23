@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -26,7 +26,8 @@ public class Publicacion {
 
     private String contenido;
 
-    private Timestamp fechaCreacion;
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion;
 
     @OneToMany(mappedBy = "publicacion", fetch = FetchType.LAZY)
     private List<Like> likes;
