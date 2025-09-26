@@ -22,20 +22,20 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public UsuarioDto save(UsuarioNuevoDto udto) {
-        Usuario u = usuarioMapper.toNuevoUsuario(udto);
+        Usuario u = usuarioMapper.nuevoUsuario(udto);
         Usuario uGuardado = usuarioRepository.save(u);
-        return usuarioDtoMapper.toUsuarioDto(uGuardado);
+        return usuarioDtoMapper.toDto(uGuardado);
     }
 
     @Override
     public UsuarioDto findById(Long id) {
-        return usuarioDtoMapper.toUsuarioDto(usuarioRepository.findById(id).orElse(null));
+        return usuarioDtoMapper.toDto(usuarioRepository.findById(id).orElse(null));
     }
 
     @Override
     public UsuarioPerfilDto findByNombreUsuario(String nombreUsuario) {
         Usuario u = usuarioRepository.findByNombreUsuario(nombreUsuario);
-        return usuarioDtoMapper.toUsuarioPerfilDto(u);
+        return usuarioDtoMapper.toPerfilDto(u);
     }
 
     @Override

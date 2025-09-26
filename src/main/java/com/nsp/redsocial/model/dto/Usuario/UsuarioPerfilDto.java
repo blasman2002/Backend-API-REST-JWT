@@ -3,9 +3,9 @@ package com.nsp.redsocial.model.dto.Usuario;
 import lombok.*;
 
 @Getter
-@Setter
 @Builder
 public class UsuarioPerfilDto {
+    private Long id;
     private String nombreUsuario;
     private String descripcion;
 }

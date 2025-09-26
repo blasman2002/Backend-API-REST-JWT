@@ -1,6 +1,7 @@
 package com.nsp.redsocial.mapper.Usuario;
 
 import com.nsp.redsocial.model.dto.Usuario.UsuarioDto;
+import com.nsp.redsocial.model.dto.Usuario.UsuarioDtoSimple;
 import com.nsp.redsocial.model.dto.Usuario.UsuarioPerfilDto;
 import com.nsp.redsocial.model.entity.Usuario;
 import org.springframework.stereotype.Component;
@@ -8,19 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UsuarioDtoMapper {
 
-    public UsuarioPerfilDto toUsuarioPerfilDto(Usuario u) {
-        if (u == null) {
-            return null;
-        }
-
-        return UsuarioPerfilDto.builder()
-                .nombreUsuario(u.getNombreUsuario())
-                .descripcion(u.getDescripcion())
-                .build();
-
-    }
-
-    public UsuarioDto toUsuarioDto(Usuario u) {
+    public UsuarioDto toDto(Usuario u) {
         if (u == null) {
             return null;
         }
@@ -33,6 +22,30 @@ public class UsuarioDtoMapper {
                 .descripcion(u.getDescripcion())
                 .fechaCreacion(u.getFechaCreacion())
                 .build();
+    }
+
+    public UsuarioPerfilDto toPerfilDto(Usuario u) {
+        if (u == null) {
+            return null;
+        }
+
+        return UsuarioPerfilDto.builder()
+                .nombreUsuario(u.getNombreUsuario())
+                .descripcion(u.getDescripcion())
+                .build();
+
+    }
+
+    public UsuarioDtoSimple toDtoSimple(Usuario u) {
+        if (u == null) {
+            return null;
+        }
+
+        return UsuarioDtoSimple.builder()
+                .id(u.getId())
+                .nombreUsuario(u.getNombreUsuario())
+                .build();
+
     }
 
 }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UsuarioMapper {
 
-    public Usuario toNuevoUsuario(UsuarioNuevoDto udto) {
+    public Usuario nuevoUsuario(UsuarioNuevoDto udto) {
         if (udto == null) {
             return null;
         }
