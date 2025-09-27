@@ -17,15 +17,15 @@ public class Like {
     private LikeId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("publicacionId")
-    @JoinColumn(name = "publicacion_id")
-    private Publicacion publicacion;
+    @MapsId("postId")
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("usuarioId")
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
+    @MapsId("userId")
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(name = "fecha_like")
-    private LocalDateTime fechaLike;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 }

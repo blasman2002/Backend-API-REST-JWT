@@ -11,23 +11,22 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "comentarios")
-public class Comentario {
+@Table(name = "comments")
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "publicacion_id")
-    private Publicacion publicacion;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    private String contenido;
+    private String content;
 
-    @Column(name = "fecha_creacion")
-    private LocalDateTime fechaCreacion;
-
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 }

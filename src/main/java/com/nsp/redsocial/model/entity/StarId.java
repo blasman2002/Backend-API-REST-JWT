@@ -12,10 +12,10 @@ import java.io.Serializable;
 @Setter
 @EqualsAndHashCode
 @Embeddable
-public class EstrellaId implements Serializable {
-    @Column(name = "usuario1_id")
-    private Long usuario1Id;
+public class StarId implements Serializable {
+    @Column(name = "user1_id")
+    private Long user1id;
 
-    @Column(name = "usuario2_id")
-    private Long usuario2Id;
+    @Column(name = "user2_id")
+    private Long user2id;
 }

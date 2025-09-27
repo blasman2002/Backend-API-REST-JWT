@@ -13,9 +13,9 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @Embeddable
 public class LikeId implements Serializable {
-    @Column(name = "publicacion_id")
-    private Long publicacionId;
+    @Column(name = "post_id")
+    private Long postId;
 
-    @Column(name = "usuario_id")
-    private Long usuarioId;
+    @Column(name = "user_id")
+    private Long userId;
 }
