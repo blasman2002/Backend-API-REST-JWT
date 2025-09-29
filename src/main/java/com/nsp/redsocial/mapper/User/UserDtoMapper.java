@@ -1,4 +1,4 @@
-package com.nsp.redsocial.mapper.Usuario;
+package com.nsp.redsocial.mapper.User;
 
 import com.nsp.redsocial.model.dto.User.UserDto;
 import com.nsp.redsocial.model.dto.User.UserDtoSimple;

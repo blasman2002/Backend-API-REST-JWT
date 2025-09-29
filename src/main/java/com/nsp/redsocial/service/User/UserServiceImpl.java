@@ -1,7 +1,7 @@
 package com.nsp.redsocial.service.User;
 
-import com.nsp.redsocial.mapper.Usuario.UserDtoMapper;
-import com.nsp.redsocial.mapper.Usuario.UserMapper;
+import com.nsp.redsocial.mapper.User.UserDtoMapper;
+import com.nsp.redsocial.mapper.User.UserMapper;
 import com.nsp.redsocial.model.dto.User.UserDto;
 import com.nsp.redsocial.model.dto.User.UserNewDto;
 import com.nsp.redsocial.model.dto.User.UserProfileDto;
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long id) {
-
+        userRepository.deleteById(id);
     }
 
 }

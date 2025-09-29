@@ -1,6 +1,6 @@
 package com.nsp.redsocial.model.dto.Post;
 
-import com.nsp.redsocial.model.dto.User.UserDto;
+import com.nsp.redsocial.model.dto.User.UserDtoSimple;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,6 +8,6 @@ import lombok.Getter;
 @Builder
 public class PostDtoSimple {
     private Long id;
-    private UserDto userDto;
+    private UserDtoSimple userDtoSimple;
     private String title;
 }

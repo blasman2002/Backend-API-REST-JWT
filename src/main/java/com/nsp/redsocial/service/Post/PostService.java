@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PostService {
     PostDto save(PostNewDto postNewDto, Long userId);
-    List<PostDtoSimple> findAll();
+    List<PostDtoSimple> findAllRecent();
     PostDto findById(Long id);
     void delete(Long id);
 }

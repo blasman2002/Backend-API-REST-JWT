@@ -1,11 +1,14 @@
 package com.nsp.redsocial.controller;
 
 import com.nsp.redsocial.model.dto.Post.PostDto;
+import com.nsp.redsocial.model.dto.Post.PostDtoSimple;
 import com.nsp.redsocial.model.dto.Post.PostNewDto;
 import com.nsp.redsocial.service.Post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -13,14 +16,25 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
     private final PostService postService;
 
-    @PostMapping("/users/{userId}/posts")
+    @PostMapping("users/{userId}/posts")
     public ResponseEntity<PostDto> createPost(@PathVariable Long userId, @RequestBody PostNewDto postNewDto) {
         return ResponseEntity.ok(postService.save(postNewDto, userId));
     }
 
-    @GetMapping("/posts/{id}")
+    @GetMapping("posts/{id}")
     public ResponseEntity<PostDto> getPost(@PathVariable Long id){
         return ResponseEntity.ok(postService.findById(id));
+    }
+
+    @DeleteMapping("posts/{id}")
+    public ResponseEntity<Void> deletePost(@PathVariable Long id){
+        postService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("posts")
+    public ResponseEntity<List<PostDtoSimple>> getAllPosts(){
+        return ResponseEntity.ok(postService.findAllRecent());
     }
 
 }

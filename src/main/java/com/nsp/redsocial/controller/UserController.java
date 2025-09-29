@@ -20,8 +20,14 @@ public class UserController {
     }
 
     @GetMapping("users/{username}/profile")
-    public ResponseEntity<UserProfileDto> findByUsername(@PathVariable String username) {
+    public ResponseEntity<UserProfileDto> findProfile(@PathVariable String username) {
         return ResponseEntity.ok(userService.findByUsername(username));
+    }
+
+    @DeleteMapping("users/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

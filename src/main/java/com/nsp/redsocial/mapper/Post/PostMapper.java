@@ -1,4 +1,4 @@
-package com.nsp.redsocial.mapper.Publicacion;
+package com.nsp.redsocial.mapper.Post;
 
 import com.nsp.redsocial.model.dto.Post.PostNewDto;
 import com.nsp.redsocial.model.entity.Post;
