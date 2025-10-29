@@ -16,9 +16,9 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-    @PostMapping("users/{userId}/posts")
-    public ResponseEntity<PostDto> createPost(@PathVariable Long userId, @RequestBody PostNewDto postNewDto) {
-        return ResponseEntity.ok(postService.save(postNewDto, userId));
+    @PostMapping("users/{id}/posts")
+    public ResponseEntity<PostDto> createPost(@PathVariable Long id, @RequestBody PostNewDto postNewDto) {
+        return ResponseEntity.ok(postService.save(postNewDto, id));
     }
 
     @GetMapping("posts/{id}")

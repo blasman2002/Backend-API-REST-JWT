@@ -16,17 +16,17 @@ public class UserController {
 
     @PostMapping("users")
     public ResponseEntity<UserDto> register(@RequestBody UserNewDto userNewDto) {
-        return ResponseEntity.ok(userService.save(userNewDto));
+        return ResponseEntity.ok(userService.registerUser(userNewDto));
     }
 
-    @GetMapping("users/{username}/profile")
-    public ResponseEntity<UserProfileDto> findProfile(@PathVariable String username) {
-        return ResponseEntity.ok(userService.findByUsername(username));
+    @GetMapping("users/{id}/profile")
+    public ResponseEntity<UserProfileDto> showProfile(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findProfile(id));
     }
 
     @DeleteMapping("users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        userService.delete(id);
+        userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
 

@@ -21,25 +21,24 @@ public class UserServiceImpl implements UserService {
     private final UserDtoMapper userDtoMapper;
 
     @Override
-    public UserDto save(UserNewDto userNewDto) {
+    public UserDto registerUser(UserNewDto userNewDto) {
         User u = userMapper.toNewUser(userNewDto);
         User saved = userRepository.save(u);
         return userDtoMapper.toDto(saved);
     }
 
     @Override
-    public UserDto findById(Long id) {
+    public UserDto findUserId(Long id) {
         return userDtoMapper.toDto(userRepository.findById(id).orElse(null));
     }
 
-    @Override
-    public UserProfileDto findByUsername(String username) {
-        User u = userRepository.findByUsername(username);
+    public UserProfileDto findProfile(Long id) {
+        User u = userRepository.findById(id).orElse(null);
         return userDtoMapper.toProfileDto(u);
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 

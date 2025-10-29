@@ -5,8 +5,8 @@ import com.nsp.redsocial.model.dto.User.UserNewDto;
 import com.nsp.redsocial.model.dto.User.UserProfileDto;
 
 public interface UserService {
-    UserDto save(UserNewDto userNewDto);
-    UserDto findById(Long id);
-    UserProfileDto findByUsername(String username);
-    void delete(Long id);
+    UserDto registerUser(UserNewDto userNewDto);
+    UserDto findUserId(Long id);
+    UserProfileDto findProfile(Long id);
+    void deleteUser(Long id);
 }

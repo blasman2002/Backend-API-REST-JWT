@@ -30,6 +30,7 @@ public class UserDtoMapper {
         }
 
         return UserProfileDto.builder()
+                .id(u.getId())
                 .username(u.getUsername())
                 .userDesc(u.getUserDesc())
                 .build();
