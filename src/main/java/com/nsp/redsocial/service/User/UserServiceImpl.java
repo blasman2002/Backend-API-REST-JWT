@@ -32,6 +32,7 @@ public class UserServiceImpl implements UserService {
         return userDtoMapper.toDto(userRepository.findById(id).orElse(null));
     }
 
+    @Override
     public UserProfileDto findProfile(Long id) {
         User u = userRepository.findById(id).orElse(null);
         return userDtoMapper.toProfileDto(u);

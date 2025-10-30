@@ -9,10 +9,10 @@ import com.nsp.redsocial.model.entity.Post;
 import com.nsp.redsocial.model.entity.User;
 import com.nsp.redsocial.model.repository.PostRepository;
 import com.nsp.redsocial.model.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;

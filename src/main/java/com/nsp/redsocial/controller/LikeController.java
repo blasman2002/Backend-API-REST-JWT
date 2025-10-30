@@ -1,0 +1,25 @@
+package com.nsp.redsocial.controller;
+
+import com.nsp.redsocial.service.Like.LikeService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/v1")
+public class LikeController {
+    private final LikeService likeService;
+
+    @PostMapping("/posts/{postId}/like/{userId}")
+    public ResponseEntity<?> giveLike(@PathVariable Long postId, @PathVariable Long userId) {
+        likeService.giveLike(postId, userId);
+        return ResponseEntity.ok("like dado.");
+    }
+
+    @DeleteMapping("/posts/{postId}/like/{userId}")
+    public ResponseEntity<?> deleteLike(@PathVariable Long postId, @PathVariable Long userId) {
+        likeService.removeLike(postId, userId);
+        return ResponseEntity.ok("like retirado.");
+    }
+}
