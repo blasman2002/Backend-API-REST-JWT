@@ -1,5 +1,6 @@
 package com.nsp.redsocial.controller;
 
+import com.nsp.redsocial.exception.ResourceNotFoundException;
 import com.nsp.redsocial.model.dto.User.UserDto;
 import com.nsp.redsocial.model.dto.User.UserNewDto;
 import com.nsp.redsocial.model.dto.User.UserProfileDto;
@@ -21,7 +22,12 @@ public class UserController {
 
     @GetMapping("users/{id}/profile")
     public ResponseEntity<UserProfileDto> showProfile(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.findProfile(id));
+        UserProfileDto dtoProfile = userService.findProfile(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("user not found")
+                );
+
+        return ResponseEntity.ok(dtoProfile);
     }
 
     @DeleteMapping("users/{id}")

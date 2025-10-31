@@ -10,6 +10,8 @@ import com.nsp.redsocial.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,9 +35,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProfileDto findProfile(Long id) {
+    public Optional<UserProfileDto> findProfile(Long id) {
         User u = userRepository.findById(id).orElse(null);
-        return userDtoMapper.toProfileDto(u);
+        return Optional.ofNullable(userDtoMapper.toProfileDto(u));
     }
 
     @Override

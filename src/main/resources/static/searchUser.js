@@ -1,10 +1,10 @@
-let url = 'api/v1/usuarios/perfil';
+let url = 'api/v1/users/profile';
 
-function buscarPorNombre(nombre) {
-    fetch(`${url}/${nombre}`)
+function searchProfileId(id) {
+    fetch(`api/v1/users/${id}/profile`)
         .then(response => response.json())
         .then(data => console.log(data))
         .catch(error => console.error("Error al buscar usuario:", error));
 }
 
-buscarPorNombre('nico7');
+searchProfileId('2');
