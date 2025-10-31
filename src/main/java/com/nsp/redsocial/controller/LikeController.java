@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
     private final LikeService likeService;
 
-    @PostMapping("/posts/{postId}/like/{userId}")
+    @PostMapping("/posts/{postId}/likes/{userId}")
     public ResponseEntity<?> giveLike(@PathVariable Long postId, @PathVariable Long userId) {
         likeService.giveLike(postId, userId);
         return ResponseEntity.ok("like dado.");
     }
 
-    @DeleteMapping("/posts/{postId}/like/{userId}")
+    @DeleteMapping("/posts/{postId}/likes/{userId}")
     public ResponseEntity<?> deleteLike(@PathVariable Long postId, @PathVariable Long userId) {
         likeService.removeLike(postId, userId);
         return ResponseEntity.ok("like retirado.");

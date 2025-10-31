@@ -1,7 +1,7 @@
 package com.nsp.redsocial.controller;
 
+import com.nsp.redsocial.model.dto.Comment.CommentDto;
 import com.nsp.redsocial.model.dto.Comment.CommentNewDto;
-import com.nsp.redsocial.model.entity.Comment;
 import com.nsp.redsocial.service.Comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<Comment> commentPost(@PathVariable Long postId, @RequestBody CommentNewDto commentNewDto) {
+    public ResponseEntity<CommentDto> commentPost(@PathVariable Long postId, @RequestBody CommentNewDto commentNewDto) {
         return ResponseEntity.ok(commentService.commentPost(postId, commentNewDto));
     }
 
