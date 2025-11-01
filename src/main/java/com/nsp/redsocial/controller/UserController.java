@@ -5,6 +5,7 @@ import com.nsp.redsocial.model.dto.User.UserDto;
 import com.nsp.redsocial.model.dto.User.UserNewDto;
 import com.nsp.redsocial.model.dto.User.UserProfileDto;
 import com.nsp.redsocial.service.User.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,10 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("users")
-    public ResponseEntity<UserDto> register(@RequestBody UserNewDto userNewDto) {
-        return ResponseEntity.ok(userService.registerUser(userNewDto));
+    public ResponseEntity<UserDto> register(@Valid @RequestBody UserNewDto userNewDto) {
+        UserDto user = userService.registerUser(userNewDto);
+
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("users/{id}/profile")
