@@ -7,7 +7,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,11 +17,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         Map<String, Object> errors = new HashMap<>();
 
-        errors.put("timestamp", new Date());
-
         e.getBindingResult().getAllErrors().forEach((error) -> {
            String field = ((FieldError) error).getField();
-           String msg = ((FieldError) error).getDefaultMessage();
+           String msg = error.getDefaultMessage();
            errors.put(field, msg);
         });
 

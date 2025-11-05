@@ -1,6 +1,5 @@
 package com.nsp.redsocial.controller;
 
-import com.nsp.redsocial.exception.ResourceNotFoundException;
 import com.nsp.redsocial.model.dto.User.UserDto;
 import com.nsp.redsocial.model.dto.User.UserNewDto;
 import com.nsp.redsocial.model.dto.User.UserProfileDto;
@@ -12,25 +11,20 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class UserController {
+
     private final UserService userService;
 
     @PostMapping("users")
     public ResponseEntity<UserDto> register(@Valid @RequestBody UserNewDto userNewDto) {
         UserDto user = userService.registerUser(userNewDto);
-
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("users/{id}/profile")
     public ResponseEntity<UserProfileDto> showProfile(@PathVariable Long id) {
-        UserProfileDto dtoProfile = userService.findProfile(id)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("user not found")
-                );
-
-        return ResponseEntity.ok(dtoProfile);
+        return ResponseEntity.ok(userService.findProfile(id));
     }
 
     @DeleteMapping("users/{id}")

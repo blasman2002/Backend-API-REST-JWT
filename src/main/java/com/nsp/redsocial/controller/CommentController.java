@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class CommentController {
+
     private final CommentService commentService;
 
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<CommentDto> commentPost(@PathVariable Long postId, @RequestBody CommentNewDto commentNewDto) {
         return ResponseEntity.ok(commentService.commentPost(postId, commentNewDto));
     }
-
 
 }
