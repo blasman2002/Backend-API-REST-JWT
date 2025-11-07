@@ -31,7 +31,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public PostDto save(PostNewDto postNewDto, Long userId) {
+    public PostDto createPost(PostNewDto postNewDto, Long userId) {
         Post p = postMapper.toNewPost(postNewDto);
         User u = userRepository.getUserById(userId);
         p.setUser(u);
@@ -43,7 +43,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public List<PostDtoSimple> findAllRecent() {
+    public List<PostDtoSimple> loadAllRecentPosts() {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
 
         List<Post> postsFound = postRepository.findAll(sort);
@@ -58,13 +58,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto findById(Long id) {
-        Post p = postRepository.findById(id).orElse(null);
-        return postDtoMapper.toDto(p);
-    }
-
-    @Override
-    public void delete(Long id) {
+    public void deletePost(Long id) {
         postRepository.deleteById(id);
     }
 

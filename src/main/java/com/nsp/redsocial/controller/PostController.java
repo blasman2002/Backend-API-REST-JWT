@@ -19,23 +19,18 @@ public class PostController {
 
     @PostMapping("users/{id}/posts")
     public ResponseEntity<PostDto> createPost(@PathVariable Long id, @RequestBody PostNewDto postNewDto) {
-        return ResponseEntity.ok(postService.save(postNewDto, id));
-    }
-
-    @GetMapping("posts/{id}")
-    public ResponseEntity<PostDto> getPost(@PathVariable Long id){
-        return ResponseEntity.ok(postService.findById(id));
+        return ResponseEntity.ok(postService.createPost(postNewDto, id));
     }
 
     @DeleteMapping("posts/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id){
-        postService.delete(id);
+        postService.deletePost(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("posts")
     public ResponseEntity<List<PostDtoSimple>> getAllPosts(){
-        return ResponseEntity.ok(postService.findAllRecent());
+        return ResponseEntity.ok(postService.loadAllRecentPosts());
     }
 
 }

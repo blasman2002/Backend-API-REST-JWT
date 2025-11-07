@@ -7,8 +7,7 @@ import com.nsp.redsocial.model.dto.Post.PostNewDto;
 import java.util.List;
 
 public interface PostService {
-    PostDto save(PostNewDto postNewDto, Long userId);
-    List<PostDtoSimple> findAllRecent();
-    PostDto findById(Long id);
-    void delete(Long id);
+    PostDto createPost(PostNewDto postNewDto, Long userId);
+    List<PostDtoSimple> loadAllRecentPosts();
+    void deletePost(Long id);
 }

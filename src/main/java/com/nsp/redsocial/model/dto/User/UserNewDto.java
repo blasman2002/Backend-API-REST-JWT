@@ -11,6 +11,7 @@ import lombok.*;
 public class UserNewDto {
     @NotBlank(message = "username cannot be blank")
     @Size(min = 6, message = "username must have 6 or more characters")
+    @Pattern(regexp = "^\\S*$", message = "username must not contain spaces")
     private String username;
 
     @NotBlank(message = "email cannot be blank")
@@ -19,5 +20,6 @@ public class UserNewDto {
 
     @NotBlank(message = "password cannot be blank")
     @Size(min = 6, message = "password must have 6 or more characters")
+    @Pattern(regexp = "^\\S*$", message = "password must not contain spaces")
     private String userPassword;
 }
