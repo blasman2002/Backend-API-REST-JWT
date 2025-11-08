@@ -1,5 +1,6 @@
 package com.nsp.redsocial.service.Post;
 
+import com.nsp.redsocial.exception.ResourceNotFoundException;
 import com.nsp.redsocial.mapper.Post.PostDtoMapper;
 import com.nsp.redsocial.mapper.Post.PostMapper;
 import com.nsp.redsocial.model.dto.Post.PostDto;
@@ -60,6 +61,16 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePost(Long id) {
         postRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public PostDto showPost(Long id) {
+        Post p = postRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Post not found")
+        );
+
+        return postDtoMapper.toDto(p);
     }
 
 }

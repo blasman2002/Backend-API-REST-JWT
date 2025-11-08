@@ -10,4 +10,5 @@ public interface PostService {
     PostDto createPost(PostNewDto postNewDto, Long userId);
     List<PostDtoSimple> loadAllRecentPosts();
     void deletePost(Long id);
+    PostDto showPost(Long id);
 }
