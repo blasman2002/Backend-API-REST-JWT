@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.nsp</groupId>
-	<artifactId>redsocial</artifactId>
+	<artifactId>socialmediaapi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>redsocial</name>
-	<description>proyecto personal red social spring</description>
+	<name>socialmedia-api</name>
+	<description>socialmedia api rest project</description>
 	<url/>
 	<licenses>
 		<license/>
