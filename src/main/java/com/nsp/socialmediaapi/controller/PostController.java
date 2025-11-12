@@ -6,6 +6,7 @@ import com.nsp.socialmediaapi.model.dto.Post.PostNewDto;
 import com.nsp.socialmediaapi.service.Post.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +21,13 @@ public class PostController {
 
     @PostMapping("users/{id}/posts")
     public ResponseEntity<PostDto> createPost(@PathVariable Long id, @Valid @RequestBody PostNewDto postNewDto) {
-        return ResponseEntity.ok(postService.createPost(postNewDto, id));
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPost(postNewDto, id));
     }
 
     @DeleteMapping("posts/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id){
+    public ResponseEntity<?> deletePost(@PathVariable Long id){
         postService.deletePost(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("post deleted");
     }
 
     @GetMapping("posts")

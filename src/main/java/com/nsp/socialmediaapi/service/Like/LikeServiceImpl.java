@@ -1,5 +1,6 @@
 package com.nsp.socialmediaapi.service.Like;
 
+import com.nsp.socialmediaapi.exception.ResourceNotFoundException;
 import com.nsp.socialmediaapi.model.entity.Like;
 import com.nsp.socialmediaapi.model.entity.LikeId;
 import com.nsp.socialmediaapi.model.entity.Post;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class LikeServiceImpl implements LikeService {
+
     private final PostRepository postRepository;
 
     private final UserRepository userRepository;
@@ -24,8 +26,14 @@ public class LikeServiceImpl implements LikeService {
     @Transactional
     public void giveLike(Long postId, Long userId) {
         LikeId likeId = new LikeId(postId, userId);
-        Post post = postRepository.findById(postId).orElse(null);
-        User user = userRepository.findById(userId).orElse(null);
+
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new ResourceNotFoundException("post not found")
+        );
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("user not found")
+        );
 
         Like like = new Like();
         like.setId(likeId);
@@ -36,10 +44,14 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    @Transactional
     public void removeLike(Long postId, Long userId) {
         LikeId likeId = new LikeId(postId, userId);
-        likeRepository.deleteLikeById(likeId);
+
+        if (!likeRepository.existsById(likeId)) {
+            throw new ResourceNotFoundException("like not found");
+        }
+
+        likeRepository.deleteById(likeId);
     }
 
 }
