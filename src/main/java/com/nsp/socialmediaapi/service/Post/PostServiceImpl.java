@@ -34,7 +34,11 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public PostDto createPost(PostNewDto postNewDto, Long userId) {
         Post p = postMapper.toNewPost(postNewDto);
-        User u = userRepository.getUserById(userId);
+
+        User u = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User not found")
+        );
+
         p.setUser(u);
 
         Post saved = postRepository.save(p);
@@ -60,7 +64,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(Long id) {
-        postRepository.deleteById(id);
+        Post p = postRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Post not found")
+        );
+
+        postRepository.delete(p);
     }
 
     @Override

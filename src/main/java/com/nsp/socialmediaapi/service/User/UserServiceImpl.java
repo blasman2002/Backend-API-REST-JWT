@@ -12,7 +12,6 @@ import com.nsp.socialmediaapi.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
