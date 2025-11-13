@@ -1,5 +1,6 @@
 package com.nsp.socialmediaapi.model.dto.User;
 
+import com.nsp.socialmediaapi.model.enm.Role;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,4 +15,5 @@ public class UserDto {
     private String userPassword;
     private String userDesc;
     private LocalDateTime createdAt;
+    private Role role;
 }

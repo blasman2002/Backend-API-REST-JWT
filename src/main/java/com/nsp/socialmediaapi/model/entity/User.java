@@ -1,5 +1,6 @@
 package com.nsp.socialmediaapi.model.entity;
 
+import com.nsp.socialmediaapi.model.enm.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,6 +29,10 @@ public class User {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "user_role")
+    private Role role;
 
     @PrePersist
     protected void onCreate() {

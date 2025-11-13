@@ -1,6 +1,6 @@
 package com.nsp.socialmediaapi.model.dto.Post;
 
-import com.nsp.socialmediaapi.model.dto.User.UserDtoSimple;
+import com.nsp.socialmediaapi.model.dto.User.UserDisplayDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 public class PostDto {
     private Long id;
-    private UserDtoSimple userDtoSimple;
+    private UserDisplayDto userDisplayDto;
     private String title;
     private String content;
     private LocalDateTime createdAt;

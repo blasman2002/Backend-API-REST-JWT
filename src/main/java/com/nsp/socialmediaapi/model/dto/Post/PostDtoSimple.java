@@ -1,6 +1,6 @@
 package com.nsp.socialmediaapi.model.dto.Post;
 
-import com.nsp.socialmediaapi.model.dto.User.UserDtoSimple;
+import com.nsp.socialmediaapi.model.dto.User.UserDisplayDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,6 +8,6 @@ import lombok.Getter;
 @Builder
 public class PostDtoSimple {
     private Long id;
-    private UserDtoSimple userDtoSimple;
+    private UserDisplayDto userDisplayDto;
     private String title;
 }

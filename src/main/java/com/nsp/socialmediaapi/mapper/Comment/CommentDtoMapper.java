@@ -2,7 +2,7 @@ package com.nsp.socialmediaapi.mapper.Comment;
 
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
-import com.nsp.socialmediaapi.model.dto.User.UserDtoSimple;
+import com.nsp.socialmediaapi.model.dto.User.UserDisplayDto;
 import com.nsp.socialmediaapi.model.entity.Comment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class CommentDtoMapper {
             return null;
         }
 
-        UserDtoSimple uDtoSi = userDtoMapper.toDtoSimple(comment.getUser());
+        UserDisplayDto uDtoSi = userDtoMapper.toUserDisplay(comment.getUser());
 
         return CommentDto.builder()
                 .id(comment.getId())

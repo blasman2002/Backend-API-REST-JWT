@@ -1,7 +1,7 @@
 package com.nsp.socialmediaapi.controller;
 
 import com.nsp.socialmediaapi.model.dto.User.UserDto;
-import com.nsp.socialmediaapi.model.dto.User.UserNewDto;
+import com.nsp.socialmediaapi.model.dto.User.CreateUserRequest;
 import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
 import com.nsp.socialmediaapi.service.User.UserService;
 import jakarta.validation.Valid;
@@ -18,8 +18,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("users")
-    public ResponseEntity<UserDto> register(@Valid @RequestBody UserNewDto userNewDto) {
-        UserDto user = userService.registerUser(userNewDto);
+    public ResponseEntity<UserDto> register(@Valid @RequestBody CreateUserRequest createUserRequest) {
+        UserDto user = userService.registerUser(createUserRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 

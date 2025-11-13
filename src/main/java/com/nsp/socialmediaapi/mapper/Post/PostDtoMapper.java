@@ -3,7 +3,7 @@ package com.nsp.socialmediaapi.mapper.Post;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.model.dto.Post.PostDto;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
-import com.nsp.socialmediaapi.model.dto.User.UserDtoSimple;
+import com.nsp.socialmediaapi.model.dto.User.UserDisplayDto;
 import com.nsp.socialmediaapi.model.entity.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,11 +19,11 @@ public class PostDtoMapper {
             return null;
         }
 
-        UserDtoSimple u = userDtoMapper.toDtoSimple(post.getUser());
+        UserDisplayDto u = userDtoMapper.toUserDisplay(post.getUser());
 
         return PostDto.builder()
                 .id(post.getId())
-                .userDtoSimple(u)
+                .userDisplayDto(u)
                 .title(post.getTitle())
                 .content(post.getContent())
                 .createdAt(post.getCreatedAt())
@@ -35,11 +35,11 @@ public class PostDtoMapper {
             return null;
         }
 
-        UserDtoSimple u = userDtoMapper.toDtoSimple(post.getUser());
+        UserDisplayDto u = userDtoMapper.toUserDisplay(post.getUser());
 
         return PostDtoSimple.builder()
                 .id(post.getId())
-                .userDtoSimple(u)
+                .userDisplayDto(u)
                 .title(post.getTitle())
                 .build();
     }

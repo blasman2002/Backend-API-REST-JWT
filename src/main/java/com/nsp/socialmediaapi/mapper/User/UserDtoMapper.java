@@ -1,7 +1,7 @@
 package com.nsp.socialmediaapi.mapper.User;
 
 import com.nsp.socialmediaapi.model.dto.User.UserDto;
-import com.nsp.socialmediaapi.model.dto.User.UserDtoSimple;
+import com.nsp.socialmediaapi.model.dto.User.UserDisplayDto;
 import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
 import com.nsp.socialmediaapi.model.entity.User;
 import org.springframework.stereotype.Component;
@@ -21,6 +21,7 @@ public class UserDtoMapper {
                 .userPassword(u.getUserPassword())
                 .userDesc(u.getUserDesc())
                 .createdAt(u.getCreatedAt())
+                .role(u.getRole())
                 .build();
     }
 
@@ -37,12 +38,12 @@ public class UserDtoMapper {
 
     }
 
-    public UserDtoSimple toDtoSimple(User u) {
+    public UserDisplayDto toUserDisplay(User u) {
         if (u == null) {
             return null;
         }
 
-        return UserDtoSimple.builder()
+        return UserDisplayDto.builder()
                 .id(u.getId())
                 .username(u.getUsername())
                 .build();

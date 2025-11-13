@@ -8,7 +8,7 @@ import lombok.*;
 
 @Getter
 @Builder
-public class UserNewDto {
+public class CreateUserRequest {
     @NotBlank(message = "username cannot be blank")
     @Size(min = 6, message = "username must have 6 or more characters")
     @Pattern(regexp = "^\\S*$", message = "username must not contain spaces")
