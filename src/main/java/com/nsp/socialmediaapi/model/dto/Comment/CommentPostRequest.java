@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CommentNewDto {
+public class CommentPostRequest {
     private Long userId;
 
     @NotBlank(message = "must write something")

@@ -2,7 +2,7 @@ package com.nsp.socialmediaapi.controller;
 
 import com.nsp.socialmediaapi.model.dto.Post.PostDto;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
-import com.nsp.socialmediaapi.model.dto.Post.PostNewDto;
+import com.nsp.socialmediaapi.model.dto.Post.CreatePostRequest;
 import com.nsp.socialmediaapi.service.Post.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("users/{id}/posts")
-    public ResponseEntity<PostDto> createPost(@PathVariable Long id, @Valid @RequestBody PostNewDto postNewDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPost(postNewDto, id));
+    public ResponseEntity<PostDto> createPost(@PathVariable Long id, @Valid @RequestBody CreatePostRequest createPostRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPost(createPostRequest, id));
     }
 
     @DeleteMapping("posts/{id}")

@@ -4,7 +4,7 @@ import com.nsp.socialmediaapi.exception.ResourceNotFoundException;
 import com.nsp.socialmediaapi.mapper.Comment.CommentDtoMapper;
 import com.nsp.socialmediaapi.mapper.Comment.CommentMapper;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
-import com.nsp.socialmediaapi.model.dto.Comment.CommentNewDto;
+import com.nsp.socialmediaapi.model.dto.Comment.CommentPostRequest;
 import com.nsp.socialmediaapi.model.entity.Comment;
 import com.nsp.socialmediaapi.model.entity.Post;
 import com.nsp.socialmediaapi.model.entity.User;
@@ -31,16 +31,16 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentDto commentPost(Long postId, CommentNewDto commentNewDto) {
+    public CommentDto commentPost(Long postId, CommentPostRequest commentPostRequest) {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new ResourceNotFoundException("post not found")
         );
 
-        User user = userRepository.findById(commentNewDto.getUserId()).orElseThrow(
+        User user = userRepository.findById(commentPostRequest.getUserId()).orElseThrow(
                 () -> new ResourceNotFoundException("user not found")
         );
 
-        Comment comment = commentMapper.toNewComment(commentNewDto);
+        Comment comment = commentMapper.toComment(commentPostRequest);
         comment.setPost(post);
         comment.setUser(user);
 

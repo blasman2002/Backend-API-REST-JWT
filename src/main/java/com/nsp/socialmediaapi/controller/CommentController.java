@@ -1,7 +1,7 @@
 package com.nsp.socialmediaapi.controller;
 
 import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
-import com.nsp.socialmediaapi.model.dto.Comment.CommentNewDto;
+import com.nsp.socialmediaapi.model.dto.Comment.CommentPostRequest;
 import com.nsp.socialmediaapi.service.Comment.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +17,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<CommentDto> commentPost(@PathVariable Long postId, @Valid @RequestBody CommentNewDto commentNewDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.commentPost(postId, commentNewDto));
+    public ResponseEntity<CommentDto> commentPost(@PathVariable Long postId, @Valid @RequestBody CommentPostRequest commentPostRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.commentPost(postId, commentPostRequest));
     }
 
 }

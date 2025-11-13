@@ -5,7 +5,7 @@ import com.nsp.socialmediaapi.mapper.Post.PostDtoMapper;
 import com.nsp.socialmediaapi.mapper.Post.PostMapper;
 import com.nsp.socialmediaapi.model.dto.Post.PostDto;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
-import com.nsp.socialmediaapi.model.dto.Post.PostNewDto;
+import com.nsp.socialmediaapi.model.dto.Post.CreatePostRequest;
 import com.nsp.socialmediaapi.model.entity.Post;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.PostRepository;
@@ -32,8 +32,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public PostDto createPost(PostNewDto postNewDto, Long userId) {
-        Post p = postMapper.toNewPost(postNewDto);
+    public PostDto createPost(CreatePostRequest createPostRequest, Long userId) {
+        Post p = postMapper.toPost(createPostRequest);
 
         User u = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User not found")
