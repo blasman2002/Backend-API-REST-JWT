@@ -2,15 +2,15 @@ package com.nsp.socialmediaapi.model.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Getter
 @Setter
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 @Embeddable
 public class StarId implements Serializable {
     @Column(name = "user1_id")
@@ -18,4 +18,5 @@ public class StarId implements Serializable {
 
     @Column(name = "user2_id")
     private Long user2id;
+
 }

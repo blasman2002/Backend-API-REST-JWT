@@ -25,7 +25,7 @@ public class LikeServiceImpl implements LikeService {
     @Override
     @Transactional
     public void giveLike(Long postId, Long userId) {
-        LikeId likeId = new LikeId(postId, userId);
+        LikeId likeId = new LikeId();
 
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new ResourceNotFoundException("post not found")
@@ -34,6 +34,9 @@ public class LikeServiceImpl implements LikeService {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("user not found")
         );
+
+        likeId.setPostId(postId);
+        likeId.setUserId(userId);
 
         Like like = new Like();
         like.setId(likeId);
@@ -47,11 +50,11 @@ public class LikeServiceImpl implements LikeService {
     public void removeLike(Long postId, Long userId) {
         LikeId likeId = new LikeId(postId, userId);
 
-        if (!likeRepository.existsById(likeId)) {
-            throw new ResourceNotFoundException("like not found");
-        }
+        Like like = likeRepository.findById(likeId).orElseThrow(
+                () -> new ResourceNotFoundException("like not found")
+        );
 
-        likeRepository.deleteById(likeId);
+        likeRepository.delete(like);
     }
 
 }

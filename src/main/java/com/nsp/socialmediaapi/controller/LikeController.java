@@ -24,4 +24,5 @@ public class LikeController {
         likeService.removeLike(postId, userId);
         return ResponseEntity.ok("like removed");
     }
+
 }

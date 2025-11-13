@@ -1,9 +1,7 @@
 package com.nsp.socialmediaapi.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -11,10 +9,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "stars")
 public class Star {
     @EmbeddedId
-    private StarId starId;
+    private StarId starId = new StarId();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("user1id")
