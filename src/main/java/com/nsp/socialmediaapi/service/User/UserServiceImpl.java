@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
             throw new UserAlreadyExistsException("Email already in use");
         }
 
-        User u = userMapper.toUserRequest(createUserRequest);
+        User u = userMapper.toEntity(createUserRequest);
         u.setRole(Role.USER);
 
         User saved = userRepository.save(u);

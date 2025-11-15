@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-    public User toUserRequest(CreateUserRequest udto) {
+    public User toEntity(CreateUserRequest udto) {
         if (udto == null) {
             return null;
         }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PostMapper {
 
-    public Post toPost(CreatePostRequest createPostRequest) {
+    public Post toEntity(CreatePostRequest createPostRequest) {
         if  (createPostRequest == null) {
             return null;
         }

@@ -40,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
                 () -> new ResourceNotFoundException("user not found")
         );
 
-        Comment comment = commentMapper.toComment(commentPostRequest);
+        Comment comment = commentMapper.toEntity(commentPostRequest);
         comment.setPost(post);
         comment.setUser(user);
 

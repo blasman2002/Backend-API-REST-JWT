@@ -33,7 +33,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public PostDto createPost(CreatePostRequest createPostRequest, Long userId) {
-        Post p = postMapper.toPost(createPostRequest);
+        Post p = postMapper.toEntity(createPostRequest);
 
         User u = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User not found")

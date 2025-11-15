@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CommentMapper {
-    public Comment toComment(CommentPostRequest commentPostRequest) {
+    public Comment toEntity(CommentPostRequest commentPostRequest) {
         if (commentPostRequest == null) {
             return null;
         }
