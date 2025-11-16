@@ -48,4 +48,19 @@ public class CommentServiceImpl implements CommentService {
 
         return commentDtoMapper.toDto(saved);
     }
+
+    @Override
+    @Transactional
+    public void deleteComment(Long postId, Long commentId, Long userId) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new ResourceNotFoundException("post not found")
+        );
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new ResourceNotFoundException("comment not found")
+        );
+
+
+    }
+
 }

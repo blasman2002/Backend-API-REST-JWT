@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
-public class CommentController {
+public class CommentRestController {
 
     private final CommentService commentService;
 

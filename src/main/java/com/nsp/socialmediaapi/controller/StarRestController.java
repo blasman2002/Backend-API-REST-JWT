@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api")
-public class StarController {
+public class StarRestController {
 
     private final StarService starService;
 

@@ -1,13 +1,9 @@
 package com.nsp.socialmediaapi.service.User;
 
 import com.nsp.socialmediaapi.exception.ResourceNotFoundException;
-import com.nsp.socialmediaapi.exception.UserAlreadyExistsException;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.mapper.User.UserMapper;
-import com.nsp.socialmediaapi.model.dto.User.UserDto;
-import com.nsp.socialmediaapi.model.dto.User.CreateUserRequest;
 import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
-import com.nsp.socialmediaapi.model.enm.Role;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,24 +18,6 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     private final UserDtoMapper userDtoMapper;
-
-    @Override
-    public UserDto registerUser(CreateUserRequest createUserRequest) {
-        if (userRepository.existsByUsername(createUserRequest.getUsername())) {
-            throw new UserAlreadyExistsException("Username already in use");
-        }
-
-        if (userRepository.existsByEmail(createUserRequest.getEmail())) {
-            throw new UserAlreadyExistsException("Email already in use");
-        }
-
-        User u = userMapper.toEntity(createUserRequest);
-        u.setRole(Role.USER);
-
-        User saved = userRepository.save(u);
-
-        return userDtoMapper.toDto(saved);
-    }
 
     @Override
     public UserProfileDto findProfile(Long id) {
