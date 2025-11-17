@@ -1,6 +1,6 @@
 package com.nsp.socialmediaapi.service.other;
 
-import com.nsp.socialmediaapi.exception.UserAlreadyExistsException;
+import com.nsp.socialmediaapi.exception.customExceptions.UserAlreadyExistsException;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.mapper.User.UserMapper;
 import com.nsp.socialmediaapi.model.dto.Login.LoginRequestDto;

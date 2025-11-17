@@ -1,6 +1,6 @@
 package com.nsp.socialmediaapi.service.User;
 
-import com.nsp.socialmediaapi.exception.ResourceNotFoundException;
+import com.nsp.socialmediaapi.exception.customExceptions.ResourceNotFoundException;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.mapper.User.UserMapper;
 import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;

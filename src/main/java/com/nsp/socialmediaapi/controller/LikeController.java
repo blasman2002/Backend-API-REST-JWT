@@ -8,20 +8,20 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api")
-public class LikeRestController {
+@RequestMapping("/api/posts")
+public class LikeController {
 
     private final LikeService likeService;
 
-    @PostMapping("/posts/{postId}/likes/{userId}")
-    public ResponseEntity<?> giveLike(@PathVariable Long postId, @PathVariable Long userId) {
-        likeService.giveLike(postId, userId);
+    @PostMapping("{id}/likes")
+    public ResponseEntity<?> giveLike(@PathVariable Long id) {
+        likeService.giveLikeToPost(id);
         return ResponseEntity.status(HttpStatus.CREATED).body("like given");
     }
 
-    @DeleteMapping("/posts/{postId}/likes/{userId}")
-    public ResponseEntity<?> deleteLike(@PathVariable Long postId, @PathVariable Long userId) {
-        likeService.removeLike(postId, userId);
+    @DeleteMapping("{id}/likes")
+    public ResponseEntity<?> deleteLike(@PathVariable Long id) {
+        likeService.removeLikeFromPost(id);
         return ResponseEntity.ok("like removed");
     }
 
