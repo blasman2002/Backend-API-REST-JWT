@@ -2,7 +2,6 @@ package com.nsp.socialmediaapi.service.Post;
 
 import com.nsp.socialmediaapi.exception.customExceptions.ResourceNotFoundException;
 import com.nsp.socialmediaapi.mapper.Post.PostDtoMapper;
-import com.nsp.socialmediaapi.mapper.Post.PostMapper;
 import com.nsp.socialmediaapi.model.dto.Post.CreatePostRequest;
 import com.nsp.socialmediaapi.model.dto.Post.PostDto;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
@@ -28,8 +27,6 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
 
     private final PostDtoMapper postDtoMapper;
-
-    private final PostMapper postMapper;
 
     @Override
     @Transactional

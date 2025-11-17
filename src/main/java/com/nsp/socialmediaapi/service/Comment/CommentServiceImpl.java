@@ -2,7 +2,6 @@ package com.nsp.socialmediaapi.service.Comment;
 
 import com.nsp.socialmediaapi.exception.customExceptions.ResourceNotFoundException;
 import com.nsp.socialmediaapi.mapper.Comment.CommentDtoMapper;
-import com.nsp.socialmediaapi.mapper.Comment.CommentMapper;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentPostRequest;
 import com.nsp.socialmediaapi.model.entity.Comment;
@@ -25,8 +24,6 @@ public class CommentServiceImpl implements CommentService {
     private final PostRepository postRepository;
 
     private final CommentRepository commentRepository;
-
-    private final CommentMapper commentMapper;
 
     private final CommentDtoMapper commentDtoMapper;
 

@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        jwt = getJwtFormRequest(request);
+        jwt = getJwtFromRequest(request);
 
         username = jwtService.getUsernameFromToken(jwt);
 
@@ -53,8 +53,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private String getJwtFormRequest(HttpServletRequest request) {
+    private String getJwtFromRequest(HttpServletRequest request) {
         final String authHeader = request.getHeader("Authorization");
         return authHeader.substring(7);
     }
+
 }

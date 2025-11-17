@@ -2,7 +2,6 @@ package com.nsp.socialmediaapi.service.other;
 
 import com.nsp.socialmediaapi.exception.customExceptions.UserAlreadyExistsException;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
-import com.nsp.socialmediaapi.mapper.User.UserMapper;
 import com.nsp.socialmediaapi.model.dto.Login.LoginRequestDto;
 import com.nsp.socialmediaapi.model.dto.Login.LoginResponseDto;
 import com.nsp.socialmediaapi.model.dto.User.CreateUserRequest;
@@ -23,8 +22,6 @@ public class AuthService {
 
     private final UserRepository userRepository;
 
-    private final UserMapper userMapper;
-
     private final UserDtoMapper userDtoMapper;
 
     private final AuthenticationManager authenticationManager;
@@ -40,7 +37,10 @@ public class AuthService {
             throw new UserAlreadyExistsException("Email already in use");
         }
 
-        User u = userMapper.toEntity(request);
+        User u = new User();
+        u.setUsername(request.getUsername());
+        u.setEmail(request.getEmail());
+        u.setUserPassword(request.getUserPassword());
         u.setRole(Role.USER);
 
         User saved = userRepository.save(u);

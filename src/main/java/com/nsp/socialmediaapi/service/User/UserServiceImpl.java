@@ -2,7 +2,6 @@ package com.nsp.socialmediaapi.service.User;
 
 import com.nsp.socialmediaapi.exception.customExceptions.ResourceNotFoundException;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
-import com.nsp.socialmediaapi.mapper.User.UserMapper;
 import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    private final UserMapper userMapper;
 
     private final UserDtoMapper userDtoMapper;
 
