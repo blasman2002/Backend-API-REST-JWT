@@ -1,9 +1,11 @@
 package com.nsp.socialmediaapi.service.other;
 
+import com.nsp.socialmediaapi.exception.customExceptions.ResourceNotFoundException;
 import com.nsp.socialmediaapi.exception.customExceptions.UserAlreadyExistsException;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.model.dto.Login.LoginRequestDto;
 import com.nsp.socialmediaapi.model.dto.Login.LoginResponseDto;
+import com.nsp.socialmediaapi.model.dto.Login.RefreshTokenRequest;
 import com.nsp.socialmediaapi.model.dto.User.CreateUserRequest;
 import com.nsp.socialmediaapi.model.dto.User.UserDto;
 import com.nsp.socialmediaapi.model.enm.Role;
@@ -14,6 +16,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +32,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     private final JwtService jwtService;
+
+    private final UserDetailsService userDetailsService;
 
     public UserDto registerUser(CreateUserRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -56,6 +63,28 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return jwtService.generateTokenResponse(authentication);
+    }
+
+    public LoginResponseDto refreshToken(RefreshTokenRequest request) {
+        String refreshToken = request.getRefreshToken();
+
+        if (!jwtService.isRefreshToken(refreshToken)) {
+            throw new IllegalArgumentException("invalid refresh token");
+        }
+
+        String user = jwtService.getUsernameFromToken(refreshToken);
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user);
+
+        if (userDetails == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+
+        String accessToken = jwtService.generateAccessToken(authentication);
+
+        return new LoginResponseDto(accessToken, refreshToken);
     }
 
 }

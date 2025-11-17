@@ -2,6 +2,7 @@ package com.nsp.socialmediaapi.controller;
 
 import com.nsp.socialmediaapi.model.dto.Login.LoginRequestDto;
 import com.nsp.socialmediaapi.model.dto.Login.LoginResponseDto;
+import com.nsp.socialmediaapi.model.dto.Login.RefreshTokenRequest;
 import com.nsp.socialmediaapi.model.dto.User.CreateUserRequest;
 import com.nsp.socialmediaapi.service.other.AuthService;
 import jakarta.validation.Valid;
@@ -23,8 +24,14 @@ public class AuthController {
 
     @PostMapping("auth/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto request) {
-        LoginResponseDto loginResponseDto = authService.login(request);
-        return ResponseEntity.ok(loginResponseDto);
+        LoginResponseDto response = authService.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("auth/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
+        LoginResponseDto response = authService.refreshToken(request);
+        return ResponseEntity.ok(response);
     }
 
 }
