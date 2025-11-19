@@ -4,7 +4,7 @@ import com.nsp.socialmediaapi.model.dto.Login.LoginRequestDto;
 import com.nsp.socialmediaapi.model.dto.Login.LoginResponseDto;
 import com.nsp.socialmediaapi.model.dto.Login.RefreshTokenRequest;
 import com.nsp.socialmediaapi.model.dto.User.CreateUserRequest;
-import com.nsp.socialmediaapi.service.other.AuthService;
+import com.nsp.socialmediaapi.service.Auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

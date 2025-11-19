@@ -1,4 +1,4 @@
-package com.nsp.socialmediaapi.service.other;
+package com.nsp.socialmediaapi.service.Auth;
 
 import com.nsp.socialmediaapi.exception.customExceptions.ResourceNotFoundException;
 import com.nsp.socialmediaapi.exception.customExceptions.UserAlreadyExistsException;
@@ -18,7 +18,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service

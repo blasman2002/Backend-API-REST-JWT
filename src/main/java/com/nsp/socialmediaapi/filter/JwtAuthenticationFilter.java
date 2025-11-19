@@ -1,6 +1,6 @@
 package com.nsp.socialmediaapi.filter;
 
-import com.nsp.socialmediaapi.service.other.JwtService;
+import com.nsp.socialmediaapi.service.Auth.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

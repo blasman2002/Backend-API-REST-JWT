@@ -1,4 +1,4 @@
-package com.nsp.socialmediaapi.service.other;
+package com.nsp.socialmediaapi.service.Auth;
 
 import com.nsp.socialmediaapi.model.dto.Login.LoginResponseDto;
 import io.jsonwebtoken.*;
