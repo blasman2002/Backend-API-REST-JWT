@@ -1,7 +1,9 @@
 package com.nsp.socialmediaapi.service.Star;
 
-import com.nsp.socialmediaapi.exception.customExceptions.ResourceNotFoundException;
-import com.nsp.socialmediaapi.exception.customExceptions.StarAlreadyExistsException;
+import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.SelfStarNotAllowedException;
+import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.StarAlreadyExistsException;
+import com.nsp.socialmediaapi.exception.NotFoundExceptions.StarNotFoundException;
+import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
 import com.nsp.socialmediaapi.model.entity.Star;
 import com.nsp.socialmediaapi.model.entity.StarId;
 import com.nsp.socialmediaapi.model.entity.User;
@@ -26,21 +28,21 @@ public class StarServiceImpl implements StarService {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User starGiver = userRepository.findByUsername(currentUsername).orElseThrow(
-                () -> new ResourceNotFoundException("Authenticated user not found")
+                UserNotFoundException::new
         );
 
         User starred = userRepository.findById(id).orElseThrow(
-                () -> new  ResourceNotFoundException("User not found")
+                UserNotFoundException::new
         );
 
         if (starGiver.getId().equals(starred.getId())) {
-            throw new IllegalArgumentException("cant star logged user");
+            throw new SelfStarNotAllowedException();
         }
 
         StarId starId = new StarId(starGiver.getId(), starred.getId());
 
         if (starRepository.existsById(starId)) {
-            throw new StarAlreadyExistsException("user already starred");
+            throw new StarAlreadyExistsException();
         }
 
         Star star = new Star();
@@ -56,23 +58,19 @@ public class StarServiceImpl implements StarService {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User starGiver = userRepository.findByUsername(currentUsername).orElseThrow(
-                () -> new ResourceNotFoundException("Authenticated user not found")
+                UserNotFoundException::new
         );
 
         User starred = userRepository.findById(userId).orElseThrow(
-                () -> new  ResourceNotFoundException("User not found")
+                UserNotFoundException::new
         );
-
-        if (starGiver.getId().equals(starred.getId())) {
-            throw new IllegalArgumentException("cant remove star from logged user");
-        }
 
         StarId starId = new StarId();
         starId.setUser1id(starGiver.getId());
         starId.setUser2id(starred.getId());
 
         if (!starRepository.existsById(starId)) {
-            throw new ResourceNotFoundException("star not found");
+            throw new StarNotFoundException();
         }
 
         starRepository.deleteById(starId);

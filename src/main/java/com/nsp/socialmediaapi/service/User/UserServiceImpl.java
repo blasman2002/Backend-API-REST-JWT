@@ -1,6 +1,6 @@
 package com.nsp.socialmediaapi.service.User;
 
-import com.nsp.socialmediaapi.exception.customExceptions.ResourceNotFoundException;
+import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
 import com.nsp.socialmediaapi.model.entity.User;
@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserProfileDto findProfile(Long id) {
         User u = userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User not found")
+                UserNotFoundException::new
         );
 
         return userDtoMapper.toProfileDto(u);
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User not found")
+                UserNotFoundException::new
         );
 
         userRepository.delete(user);

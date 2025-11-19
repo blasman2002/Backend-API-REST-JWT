@@ -1,6 +1,6 @@
 package com.nsp.socialmediaapi.service.Post;
 
-import com.nsp.socialmediaapi.exception.customExceptions.ResourceNotFoundException;
+import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
 import com.nsp.socialmediaapi.mapper.Post.PostDtoMapper;
 import com.nsp.socialmediaapi.model.dto.Post.CreatePostRequest;
 import com.nsp.socialmediaapi.model.dto.Post.PostDto;
@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByUsername(currentUsername).orElseThrow(
-                () -> new ResourceNotFoundException("user not found")
+                UserNotFoundException::new
         );
 
         Post post = new Post();

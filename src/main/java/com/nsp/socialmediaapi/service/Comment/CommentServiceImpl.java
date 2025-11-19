@@ -1,6 +1,8 @@
 package com.nsp.socialmediaapi.service.Comment;
 
-import com.nsp.socialmediaapi.exception.customExceptions.ResourceNotFoundException;
+import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.CommentDoesNotBelongToPostException;
+import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.CommentDoesNotBelongToUserException;
+import com.nsp.socialmediaapi.exception.NotFoundExceptions.*;
 import com.nsp.socialmediaapi.mapper.Comment.CommentDtoMapper;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentPostRequest;
@@ -33,11 +35,11 @@ public class CommentServiceImpl implements CommentService {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByUsername(currentUsername).orElseThrow(
-                () -> new ResourceNotFoundException("authenticated user not found")
+                UserNotFoundException::new
         );
 
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new ResourceNotFoundException("post not found")
+                PostNotFoundException::new
         );
 
         Comment comment = new Comment();
@@ -56,19 +58,19 @@ public class CommentServiceImpl implements CommentService {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Post post = postRepository.findById(postId).orElseThrow(
-                () -> new ResourceNotFoundException("post not found")
+                PostNotFoundException::new
         );
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new ResourceNotFoundException("comment not found")
+                CommentNotFoundException::new
         );
 
         if (!comment.getPost().getId().equals(post.getId())) {
-            throw new IllegalArgumentException("comment does not belong to this post");
+            throw new CommentDoesNotBelongToPostException();
         }
 
         if (!comment.getUser().getUsername().equals(currentUsername)) {
-            throw new IllegalArgumentException("comment does not belong to this user");
+            throw new CommentDoesNotBelongToUserException();
         }
 
         commentRepository.delete(comment);

@@ -1,7 +1,10 @@
 package com.nsp.socialmediaapi.service.Auth;
 
-import com.nsp.socialmediaapi.exception.customExceptions.ResourceNotFoundException;
-import com.nsp.socialmediaapi.exception.customExceptions.UserAlreadyExistsException;
+import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.EmailAlreadyInUseException;
+import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.UsernameAlreadyInUseException;
+import com.nsp.socialmediaapi.exception.BaseException.ResourceNotFoundException;
+import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.UserAlreadyExistsException;
+import com.nsp.socialmediaapi.exception.SecurityException.InvalidRefreshTokenException;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.model.dto.Login.LoginRequestDto;
 import com.nsp.socialmediaapi.model.dto.Login.LoginResponseDto;
@@ -18,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,19 +38,21 @@ public class AuthService {
 
     private final UserDetailsService userDetailsService;
 
+    private final PasswordEncoder passwordEncoder;
+
     public UserDto registerUser(CreateUserRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
-            throw new UserAlreadyExistsException("Username already in use");
+            throw new UsernameAlreadyInUseException();
         }
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new UserAlreadyExistsException("Email already in use");
+            throw new EmailAlreadyInUseException();
         }
 
         User u = new User();
         u.setUsername(request.getUsername());
         u.setEmail(request.getEmail());
-        u.setUserPassword(request.getUserPassword());
+        u.setUserPassword(passwordEncoder.encode(request.getUserPassword()));
         u.setRole(Role.USER);
 
         User saved = userRepository.save(u);
@@ -68,18 +74,19 @@ public class AuthService {
         String refreshToken = request.getRefreshToken();
 
         if (!jwtService.isRefreshToken(refreshToken)) {
-            throw new IllegalArgumentException("invalid refresh token");
+            throw new InvalidRefreshTokenException();
         }
 
         String user = jwtService.getUsernameFromToken(refreshToken);
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(user);
 
-        if (userDetails == null) {
-            throw new ResourceNotFoundException("User not found");
-        }
-
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
 
         String accessToken = jwtService.generateAccessToken(authentication);
 

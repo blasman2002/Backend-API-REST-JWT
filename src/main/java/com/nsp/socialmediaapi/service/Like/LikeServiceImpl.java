@@ -1,7 +1,9 @@
 package com.nsp.socialmediaapi.service.Like;
 
-import com.nsp.socialmediaapi.exception.customExceptions.LikeAlreadyExistsException;
-import com.nsp.socialmediaapi.exception.customExceptions.ResourceNotFoundException;
+import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.LikeAlreadyExistsException;
+import com.nsp.socialmediaapi.exception.NotFoundExceptions.LikeNotFoundException;
+import com.nsp.socialmediaapi.exception.NotFoundExceptions.PostNotFoundException;
+import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
 import com.nsp.socialmediaapi.model.entity.Like;
 import com.nsp.socialmediaapi.model.entity.LikeId;
 import com.nsp.socialmediaapi.model.entity.Post;
@@ -30,11 +32,11 @@ public class LikeServiceImpl implements LikeService {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByUsername(currentUsername).orElseThrow(
-                () -> new ResourceNotFoundException("user not found")
+                UserNotFoundException::new
         );
 
         Post post =  postRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("post not found")
+                PostNotFoundException::new
         );
 
         LikeId likeId = new LikeId();
@@ -42,7 +44,7 @@ public class LikeServiceImpl implements LikeService {
         likeId.setPostId(post.getId());
 
         if (likeRepository.existsById(likeId)) {
-            throw new LikeAlreadyExistsException("post already liked by user");
+            throw new LikeAlreadyExistsException();
         }
 
         Like like = new Like();
@@ -58,7 +60,7 @@ public class LikeServiceImpl implements LikeService {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByUsername(currentUsername).orElseThrow(
-                () -> new ResourceNotFoundException("user not found")
+                UserNotFoundException::new
         );
 
         LikeId likeId = new LikeId();
@@ -66,7 +68,7 @@ public class LikeServiceImpl implements LikeService {
         likeId.setPostId(id);
 
         Like like = likeRepository.findById(likeId).orElseThrow(
-                () -> new ResourceNotFoundException("like not found")
+                LikeNotFoundException::new
         );
 
         likeRepository.delete(like);
