@@ -2,8 +2,6 @@ package com.nsp.socialmediaapi.service.Auth;
 
 import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.EmailAlreadyInUseException;
 import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.UsernameAlreadyInUseException;
-import com.nsp.socialmediaapi.exception.BaseException.ResourceNotFoundException;
-import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.UserAlreadyExistsException;
 import com.nsp.socialmediaapi.exception.SecurityException.InvalidRefreshTokenException;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.model.dto.Login.LoginRequestDto;
