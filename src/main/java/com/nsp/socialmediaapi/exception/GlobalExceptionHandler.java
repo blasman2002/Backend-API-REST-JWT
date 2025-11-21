@@ -3,6 +3,7 @@ package com.nsp.socialmediaapi.exception;
 import com.nsp.socialmediaapi.exception.BaseException.InvalidArgumentException;
 import com.nsp.socialmediaapi.exception.BaseException.ResourceAlreadyExistsException;
 import com.nsp.socialmediaapi.exception.BaseException.ResourceNotFoundException;
+import com.nsp.socialmediaapi.exception.BaseException.TokenException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,14 @@ public class GlobalExceptionHandler {
             HttpServletRequest request
     ) {
         return buildExceptionResponse(e, HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(TokenException.class)
+    public ResponseEntity<ExceptionResponse> handleTokenException(
+            TokenException e,
+            HttpServletRequest request
+    ) {
+        return buildExceptionResponse(e, HttpStatus.UNAUTHORIZED, request);
     }
 
     private ResponseEntity<ExceptionResponse> buildExceptionResponse(Exception e,HttpStatus status, HttpServletRequest request) {
