@@ -9,13 +9,13 @@ import com.nsp.socialmediaapi.model.entity.StarId;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.StarRepository;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class StarServiceImpl implements StarService {
 
     private final StarRepository starRepository;

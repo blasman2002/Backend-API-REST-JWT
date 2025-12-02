@@ -1,7 +1,5 @@
-package com.nsp.socialmediaapi.util;
+package com.nsp.socialmediaapi.exception;
 
-import com.nsp.socialmediaapi.exception.ExceptionResponse;
-import com.nsp.socialmediaapi.exception.FieldError;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

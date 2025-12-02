@@ -4,7 +4,6 @@ import com.nsp.socialmediaapi.exception.BaseException.InvalidArgumentException;
 import com.nsp.socialmediaapi.exception.BaseException.ResourceAlreadyExistsException;
 import com.nsp.socialmediaapi.exception.BaseException.ResourceNotFoundException;
 import com.nsp.socialmediaapi.exception.BaseException.TokenException;
-import com.nsp.socialmediaapi.util.ExceptionResponseBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
