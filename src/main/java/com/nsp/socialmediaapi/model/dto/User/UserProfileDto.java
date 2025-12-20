@@ -8,4 +8,5 @@ public class UserProfileDto {
     private Long id;
     private String username;
     private String userDesc;
+    private Long starsCount;
 }

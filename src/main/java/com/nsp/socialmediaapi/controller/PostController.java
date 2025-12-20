@@ -21,4 +21,5 @@ public class PostController {
         PostDto createdPost = postService.createPost(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
     }
+
 }

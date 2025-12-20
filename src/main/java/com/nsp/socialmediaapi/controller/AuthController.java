@@ -12,23 +12,23 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("auth/register")
+    @PostMapping("register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody CreateUserRequest request) {
         return ResponseEntity.ok(authService.registerUser(request));
     }
 
-    @PostMapping("auth/login")
+    @PostMapping("login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) {
         LoginResponseDto response = authService.login(request);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("auth/refresh")
+    @PostMapping("refresh")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
         LoginResponseDto response = authService.refreshToken(request);
         return ResponseEntity.ok(response);

@@ -34,6 +34,7 @@ public class UserDtoMapper {
                 .id(u.getId())
                 .username(u.getUsername())
                 .userDesc(u.getUserDesc())
+                .starsCount((long) u.getStarsGiven().size())
                 .build();
 
     }
