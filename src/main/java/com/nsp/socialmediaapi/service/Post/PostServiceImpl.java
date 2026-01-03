@@ -1,5 +1,7 @@
 package com.nsp.socialmediaapi.service.Post;
 
+import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.PostDoesNotBelongToUserException;
+import com.nsp.socialmediaapi.exception.NotFoundExceptions.PostNotFoundException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
 import com.nsp.socialmediaapi.mapper.Post.PostDtoMapper;
 import com.nsp.socialmediaapi.model.dto.Post.CreatePostRequest;
@@ -44,6 +46,26 @@ public class PostServiceImpl implements PostService {
         Post savedPost = postRepository.save(post);
 
         return postDtoMapper.toDto(savedPost);
+    }
+
+    @Override
+    @Transactional
+    public void deletePost(Long id) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByUsername(currentUsername).orElseThrow(
+                UserNotFoundException::new
+        );
+
+        Post post = postRepository.findById(id).orElseThrow(
+                PostNotFoundException::new
+        );
+
+        if (!post.getUser().getId().equals(user.getId())) {
+            throw new PostDoesNotBelongToUserException();
+        }
+
+        postRepository.delete(post);
     }
 
     @Override

@@ -9,4 +9,5 @@ import java.util.List;
 public interface PostService {
     PostDto createPost(CreatePostRequest createPostRequest);
     List<PostDtoSimple> showUserPosts(Long id);
+    void deletePost(Long id);
 }

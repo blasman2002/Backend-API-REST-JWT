@@ -22,4 +22,10 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deletePost(@PathVariable Long id) {
+        postService.deletePost(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }
