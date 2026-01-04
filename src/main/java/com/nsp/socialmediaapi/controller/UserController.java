@@ -29,8 +29,9 @@ public class UserController {
         return ResponseEntity.ok(postService.showUserPosts(id));
     }
 
-    @DeleteMapping()
-    public ResponseEntity<?> deleteUser() {
+    @DeleteMapping("me")
+    public ResponseEntity<?> deleteUserSelf() {
+        userService.deleteUser();
         return ResponseEntity.noContent().build();
     }
 

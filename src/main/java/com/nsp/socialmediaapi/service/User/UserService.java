@@ -4,5 +4,5 @@ import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
 
 public interface UserService {
     UserProfileDto findProfile(Long id);
-    void deleteUser(Long id);
+    void deleteUser();
 }
