@@ -82,4 +82,18 @@ public class PostServiceImpl implements PostService {
         return postDtoList;
     }
 
+    @Override
+    @Transactional
+    public List<PostDtoSimple> showAllRecentPosts() {
+        List<Post> obtainedPostsList = postRepository.findAllByOrderByCreatedAtDesc();
+        List<PostDtoSimple> postDtoList = new ArrayList<>();
+
+        obtainedPostsList.forEach(post -> {
+            PostDtoSimple mappedDto = postDtoMapper.toDtoSimple(post);
+            postDtoList.add(mappedDto);
+        });
+
+        return postDtoList;
+    }
+
 }

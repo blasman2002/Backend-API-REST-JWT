@@ -2,12 +2,15 @@ package com.nsp.socialmediaapi.controller;
 
 import com.nsp.socialmediaapi.model.dto.Post.CreatePostRequest;
 import com.nsp.socialmediaapi.model.dto.Post.PostDto;
+import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
 import com.nsp.socialmediaapi.service.Post.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -26,6 +29,11 @@ public class PostController {
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<PostDtoSimple>> getAllRecentPosts() {
+        return ResponseEntity.ok(postService.showAllRecentPosts());
     }
 
 }

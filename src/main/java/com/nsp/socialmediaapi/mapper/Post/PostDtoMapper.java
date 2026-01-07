@@ -41,6 +41,7 @@ public class PostDtoMapper {
                 .id(post.getId())
                 .userDisplayDto(u)
                 .title(post.getTitle())
+                .createdAt(post.getCreatedAt())
                 .build();
     }
 
