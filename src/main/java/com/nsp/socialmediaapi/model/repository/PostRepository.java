@@ -1,6 +1,5 @@
 package com.nsp.socialmediaapi.model.repository;
 
-import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
 import com.nsp.socialmediaapi.model.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 
