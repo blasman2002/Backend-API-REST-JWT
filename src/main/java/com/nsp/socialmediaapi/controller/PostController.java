@@ -1,5 +1,6 @@
 package com.nsp.socialmediaapi.controller;
 
+import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.dto.Post.CreatePostRequest;
 import com.nsp.socialmediaapi.model.dto.Post.PostDto;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
@@ -9,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,8 +31,11 @@ public class PostController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<PostDtoSimple>> getAllRecentPosts() {
-        return ResponseEntity.ok(postService.showAllRecentPosts());
+    public ResponseEntity<PageResponse<PostDtoSimple>> getAllRecentPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+            ) {
+        return ResponseEntity.ok(postService.showAllRecentPosts(page, size));
     }
 
 }

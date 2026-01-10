@@ -3,7 +3,9 @@ package com.nsp.socialmediaapi.service.Post;
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.PostDoesNotBelongToUserException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.PostNotFoundException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
+import com.nsp.socialmediaapi.mapper.Page.PageMapper;
 import com.nsp.socialmediaapi.mapper.Post.PostDtoMapper;
+import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.dto.Post.CreatePostRequest;
 import com.nsp.socialmediaapi.model.dto.Post.PostDto;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
@@ -12,6 +14,10 @@ import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.PostRepository;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +34,8 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
 
     private final PostDtoMapper postDtoMapper;
+
+    private final PageMapper pageMapper;
 
     @Override
     @Transactional
@@ -70,30 +78,26 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public List<PostDtoSimple> showUserPosts(Long id) {
-        List<Post> obtainedPostsList = postRepository.findByUserId(id);
-        List<PostDtoSimple> postDtoList = new ArrayList<>();
+    public PageResponse<PostDtoSimple> showUserPosts(Long id, int page, int size) {
+        if (userRepository.findById(id).isEmpty()) {
+            throw new UserNotFoundException();
+        }
 
-        obtainedPostsList.forEach(post -> {
-            PostDtoSimple mappedDto = postDtoMapper.toDtoSimple(post);
-            postDtoList.add(mappedDto);
-        });
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        return postDtoList;
+        Page<PostDtoSimple> postDtoPage = postRepository.findByUserId(id, pageable).map(postDtoMapper::toDtoSimple);
+
+        return pageMapper.toPageResponse(postDtoPage);
     }
 
     @Override
     @Transactional
-    public List<PostDtoSimple> showAllRecentPosts() {
-        List<Post> obtainedPostsList = postRepository.findAllByOrderByCreatedAtDesc();
-        List<PostDtoSimple> postDtoList = new ArrayList<>();
+    public PageResponse<PostDtoSimple> showAllRecentPosts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        obtainedPostsList.forEach(post -> {
-            PostDtoSimple mappedDto = postDtoMapper.toDtoSimple(post);
-            postDtoList.add(mappedDto);
-        });
+        Page<PostDtoSimple> postDtoPage = postRepository.findAll(pageable).map(postDtoMapper::toDtoSimple);
 
-        return postDtoList;
+        return pageMapper.toPageResponse(postDtoPage);
     }
 
 }

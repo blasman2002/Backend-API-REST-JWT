@@ -1,5 +1,6 @@
 package com.nsp.socialmediaapi.controller;
 
+import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
 import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
 import com.nsp.socialmediaapi.service.Post.PostService;
@@ -25,8 +26,12 @@ public class UserController {
     }
 
     @GetMapping("{id}/posts")
-    public ResponseEntity<List<PostDtoSimple>> showUserPosts(@PathVariable Long id) {
-        return ResponseEntity.ok(postService.showUserPosts(id));
+    public ResponseEntity<PageResponse<PostDtoSimple>> showUserPosts(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+            ) {
+        return ResponseEntity.ok(postService.showUserPosts(id, page, size));
     }
 
     @DeleteMapping("me")
