@@ -79,7 +79,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public PageResponse<PostDtoSimple> showUserPosts(Long id, int page, int size) {
-        if (userRepository.findById(id).isEmpty()) {
+        if (!userRepository.existsById(id)) {
             throw new UserNotFoundException();
         }
 
