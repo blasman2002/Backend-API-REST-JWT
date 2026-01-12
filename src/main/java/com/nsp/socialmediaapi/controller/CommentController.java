@@ -2,6 +2,7 @@ package com.nsp.socialmediaapi.controller;
 
 import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentPostRequest;
+import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.service.Comment.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,14 @@ public class CommentController {
     public ResponseEntity<?> deleteCommentFromPost(@PathVariable Long postId, @PathVariable Long commentId) {
         commentService.deleteCommentFromPost(postId, commentId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("{id}/comments")
+    public ResponseEntity<PageResponse<CommentDto>> getCommentsFromPost(@PathVariable Long id,
+                                                                        @RequestParam(defaultValue = "0") int page,
+                                                                        @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(commentService.getAllCommentsFromPost(id, page, size));
     }
 
 }

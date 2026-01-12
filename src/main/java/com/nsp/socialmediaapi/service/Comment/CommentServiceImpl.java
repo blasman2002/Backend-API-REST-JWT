@@ -4,8 +4,10 @@ import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.CommentDoesNot
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.CommentDoesNotBelongToUserException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.*;
 import com.nsp.socialmediaapi.mapper.Comment.CommentDtoMapper;
+import com.nsp.socialmediaapi.mapper.Page.PageMapper;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentPostRequest;
+import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.entity.Comment;
 import com.nsp.socialmediaapi.model.entity.Post;
 import com.nsp.socialmediaapi.model.entity.User;
@@ -13,6 +15,10 @@ import com.nsp.socialmediaapi.model.repository.CommentRepository;
 import com.nsp.socialmediaapi.model.repository.PostRepository;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +34,8 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
 
     private final CommentDtoMapper commentDtoMapper;
+
+    private final PageMapper pageMapper;
 
     @Override
     @Transactional
@@ -74,6 +82,20 @@ public class CommentServiceImpl implements CommentService {
         }
 
         commentRepository.delete(comment);
+    }
+
+    @Override
+    @Transactional
+    public PageResponse<CommentDto> getAllCommentsFromPost(Long postId, int page, int size) {
+        if (!postRepository.existsById(postId)) {
+            throw new PostNotFoundException();
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+
+        Page<CommentDto> commentDtoPage = commentRepository.findByPostId(postId, pageable).map(commentDtoMapper::toDto);
+
+        return pageMapper.toPageResponse(commentDtoPage);
     }
 
 }
