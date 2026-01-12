@@ -54,6 +54,7 @@ public class StarServiceImpl implements StarService {
     }
 
     @Override
+    @Transactional
     public void removeStar(Long userId) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -75,4 +76,5 @@ public class StarServiceImpl implements StarService {
 
         starRepository.deleteById(starId);
     }
+
 }

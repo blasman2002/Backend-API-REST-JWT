@@ -56,6 +56,7 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
+    @Transactional
     public void removeLikeFromPost(Long id) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 

@@ -29,9 +29,10 @@ public class CommentController {
     }
 
     @GetMapping("{id}/comments")
-    public ResponseEntity<PageResponse<CommentDto>> getCommentsFromPost(@PathVariable Long id,
-                                                                        @RequestParam(defaultValue = "0") int page,
-                                                                        @RequestParam(defaultValue = "10") int size
+    public ResponseEntity<PageResponse<CommentDto>> getCommentsFromPost(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(commentService.getAllCommentsFromPost(id, page, size));
     }
