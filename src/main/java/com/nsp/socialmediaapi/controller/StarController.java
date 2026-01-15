@@ -1,5 +1,7 @@
 package com.nsp.socialmediaapi.controller;
 
+import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
+import com.nsp.socialmediaapi.model.dto.Star.StarReceivedDto;
 import com.nsp.socialmediaapi.service.Star.StarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,15 @@ public class StarController {
     public ResponseEntity<?> removeStarFromUser(@PathVariable Long id) {
         starService.removeStar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("{id}/stars")
+    public ResponseEntity<PageResponse<StarReceivedDto>> getStarsReceivedFromUser(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(starService.getStarsReceivedFromUser(id, page, size));
     }
 
 }

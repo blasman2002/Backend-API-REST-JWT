@@ -22,7 +22,7 @@ public class LikeController {
     @DeleteMapping("{id}/likes")
     public ResponseEntity<?> deleteLike(@PathVariable Long id) {
         likeService.removeLikeFromPost(id);
-        return ResponseEntity.ok("like removed");
+        return ResponseEntity.noContent().build();
     }
 
 }
