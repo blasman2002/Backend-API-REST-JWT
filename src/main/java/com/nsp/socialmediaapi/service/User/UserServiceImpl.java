@@ -19,6 +19,13 @@ public class UserServiceImpl implements UserService {
     private final UserDtoMapper userDtoMapper;
 
     @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(
+                UserNotFoundException::new
+        );
+    }
+
+    @Override
     public UserProfileDto findProfile(Long id) {
         User u = userRepository.findById(id).orElseThrow(
                 UserNotFoundException::new

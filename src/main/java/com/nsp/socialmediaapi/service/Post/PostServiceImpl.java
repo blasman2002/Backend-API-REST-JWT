@@ -35,6 +35,13 @@ public class PostServiceImpl implements PostService {
     private final PageMapper pageMapper;
 
     @Override
+    public Post findById(Long id) {
+        return postRepository.findById(id).orElseThrow(
+                PostNotFoundException::new
+        );
+    }
+
+    @Override
     @Transactional
     public PostDto createPost(CreatePostRequest request) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
