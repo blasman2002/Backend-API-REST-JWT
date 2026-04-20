@@ -3,16 +3,11 @@ package com.nsp.socialmediaapi.service.Star;
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.SelfStarNotAllowedException;
 import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.StarAlreadyExistsException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.StarNotFoundException;
-import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
-import com.nsp.socialmediaapi.mapper.Page.PageMapper;
-import com.nsp.socialmediaapi.mapper.Star.StarDtoMapper;
-import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
-import com.nsp.socialmediaapi.model.dto.Star.StarReceivedDto;
 import com.nsp.socialmediaapi.model.entity.Star;
 import com.nsp.socialmediaapi.model.entity.StarId;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.StarRepository;
-import com.nsp.socialmediaapi.model.repository.UserRepository;
+import com.nsp.socialmediaapi.service.User.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,24 +23,16 @@ public class StarServiceImpl implements StarService {
 
     private final StarRepository starRepository;
 
-    private final UserRepository userRepository;
-
-    private final StarDtoMapper starDtoMapper;
-
-    private final PageMapper pageMapper;
+    private final UserService userService;
 
     @Override
     @Transactional
     public void giveStar(Long id) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        User starGiver = userRepository.findByUsername(currentUsername).orElseThrow(
-                UserNotFoundException::new
-        );
+        User starGiver = userService.findByUsername(currentUsername);
 
-        User starred = userRepository.findById(id).orElseThrow(
-                UserNotFoundException::new
-        );
+        User starred = userService.findById(id);
 
         if (starGiver.getId().equals(starred.getId())) {
             throw new SelfStarNotAllowedException();
@@ -70,13 +57,9 @@ public class StarServiceImpl implements StarService {
     public void removeStar(Long userId) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        User starGiver = userRepository.findByUsername(currentUsername).orElseThrow(
-                UserNotFoundException::new
-        );
+        User starGiver = userService.findByUsername(currentUsername);
 
-        User starred = userRepository.findById(userId).orElseThrow(
-                UserNotFoundException::new
-        );
+        User starred = userService.findById(userId);
 
         StarId starId = new StarId();
         starId.setUser1id(starGiver.getId());
@@ -91,12 +74,9 @@ public class StarServiceImpl implements StarService {
 
     @Override
     @Transactional
-    public PageResponse<StarReceivedDto> getStarsReceivedFromUser(Long userId, int page, int size) {
+    public Page<Star> getStarsReceivedFromUser(Long userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-
-        Page<StarReceivedDto> starsReceivedDtos = starRepository.findByUser1_Id(userId, pageable).map(starDtoMapper::toStarReceiverDto);
-
-        return pageMapper.toPageResponse(starsReceivedDtos);
+        return starRepository.findByUser1_Id(userId, pageable);
     }
 
 }
