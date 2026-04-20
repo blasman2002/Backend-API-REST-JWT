@@ -1,8 +1,6 @@
 package com.nsp.socialmediaapi.service.User;
 
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
-import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
-import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +14,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final UserDtoMapper userDtoMapper;
-
     @Override
     public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(
@@ -30,15 +26,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username).orElseThrow(
                 UserNotFoundException::new
         );
-    }
-
-    @Override
-    public UserProfileDto findProfile(Long id) {
-        User u = userRepository.findById(id).orElseThrow(
-                UserNotFoundException::new
-        );
-
-        return userDtoMapper.toProfileDto(u);
     }
 
     @Override
