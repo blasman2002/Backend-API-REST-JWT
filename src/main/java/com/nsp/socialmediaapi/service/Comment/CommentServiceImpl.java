@@ -3,11 +3,7 @@ package com.nsp.socialmediaapi.service.Comment;
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.CommentDoesNotBelongToPostException;
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.CommentDoesNotBelongToUserException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.*;
-import com.nsp.socialmediaapi.mapper.Comment.CommentDtoMapper;
-import com.nsp.socialmediaapi.mapper.Page.PageMapper;
-import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentPostRequest;
-import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.entity.Comment;
 import com.nsp.socialmediaapi.model.entity.Post;
 import com.nsp.socialmediaapi.model.entity.User;
@@ -33,13 +29,9 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
 
-    private final CommentDtoMapper commentDtoMapper;
-
-    private final PageMapper pageMapper;
-
     @Override
     @Transactional
-    public CommentDto commentPost(Long postId, CommentPostRequest request) {
+    public Comment commentPost(Long postId, CommentPostRequest request) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByUsername(currentUsername).orElseThrow(
@@ -55,9 +47,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setUser(user);
         comment.setContent(post.getContent());
 
-        Comment savedComment = commentRepository.save(comment);
-
-        return commentDtoMapper.toDto(savedComment);
+        return commentRepository.save(comment);
     }
 
     @Override
@@ -86,16 +76,14 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public PageResponse<CommentDto> getAllCommentsFromPost(Long postId, int page, int size) {
+    public Page<Comment> getAllCommentsFromPost(Long postId, int page, int size) {
         if (!postRepository.existsById(postId)) {
             throw new PostNotFoundException();
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
-        Page<CommentDto> commentDtoPage = commentRepository.findByPostId(postId, pageable).map(commentDtoMapper::toDto);
-
-        return pageMapper.toPageResponse(commentDtoPage);
+        return commentRepository.findByPostId(postId, pageable);
     }
 
 }
