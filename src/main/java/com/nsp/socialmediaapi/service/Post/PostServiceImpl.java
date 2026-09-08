@@ -2,7 +2,12 @@ package com.nsp.socialmediaapi.service.Post;
 
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.PostDoesNotBelongToUserException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.PostNotFoundException;
+import com.nsp.socialmediaapi.mapper.Page.PageMapper;
+import com.nsp.socialmediaapi.mapper.Post.PostDtoMapper;
+import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.dto.Post.CreatePostRequest;
+import com.nsp.socialmediaapi.model.dto.Post.PostDto;
+import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
 import com.nsp.socialmediaapi.model.entity.Post;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.PostRepository;
@@ -24,6 +29,10 @@ public class PostServiceImpl implements PostService {
 
     private final UserService userService;
 
+    private final PostDtoMapper postDtoMapper;
+
+    private final PageMapper pageMapper;
+
     @Override
     public Post findById(Long id) {
         return postRepository.findById(id).orElseThrow(
@@ -33,7 +42,15 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public Post createPost(CreatePostRequest request) {
+    public PostDto findPostDtoById(Long id) {
+        Post post = findById(id);
+
+        return postDtoMapper.toDto(post);
+    }
+
+    @Override
+    @Transactional
+    public PostDto createPost(CreatePostRequest request) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userService.findByUsername(currentUsername);
@@ -43,7 +60,9 @@ public class PostServiceImpl implements PostService {
         post.setTitle(request.getTitle());
         post.setContent(request.getContent());
 
-        return postRepository.save(post);
+        postRepository.save(post);
+
+        return postDtoMapper.toDto(post);
     }
 
     @Override
@@ -74,9 +93,17 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public Page<Post> showAllRecentPosts(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return postRepository.findAll(pageable);
+    public PageResponse<PostDtoSimple> showAllRecentPosts(int page, int size) {
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by("createdAt").descending()
+        );
+
+        Page<Post> postPage = postRepository.findAll(pageable);
+        Page<PostDtoSimple> postDtoSimplePage = postPage.map(postDtoMapper::toDtoSimple);
+
+        return pageMapper.toPageResponse(postDtoSimplePage);
     }
 
 }
