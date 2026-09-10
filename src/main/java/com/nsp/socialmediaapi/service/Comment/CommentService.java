@@ -1,11 +1,11 @@
 package com.nsp.socialmediaapi.service.Comment;
 
+import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentPostRequest;
-import com.nsp.socialmediaapi.model.entity.Comment;
-import org.springframework.data.domain.Page;
+import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 
 public interface CommentService {
-    Comment commentPost(Long postId, CommentPostRequest request);
+    CommentDto commentPost(Long postId, CommentPostRequest request);
     void deleteCommentFromPost(Long postId, Long commentId);
-    Page<Comment> getAllCommentsFromPost(Long postId, int page, int size);
+    PageResponse<CommentDto> getAllCommentsFromPost(Long postId, int page, int size);
 }
