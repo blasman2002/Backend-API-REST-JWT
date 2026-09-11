@@ -85,20 +85,19 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public Page<Post> showUserPosts(Long id, int page, int size) {
+    public PageResponse<PostDtoSimple> showUserPosts(Long id, int page, int size) {
         userService.findById(id);
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        return postRepository.findByUserId(id, pageable);
+        Page<Post> userPosts = postRepository.findByUserId(id, pageable);
+        Page<PostDtoSimple> userPostsDtoSimple = userPosts.map(postDtoMapper::toDtoSimple);
+
+        return pageMapper.toPageResponse(userPostsDtoSimple);
     }
 
     @Override
     @Transactional
     public PageResponse<PostDtoSimple> showAllRecentPosts(int page, int size) {
-        Pageable pageable = PageRequest.of(
-                page,
-                size,
-                Sort.by("createdAt").descending()
-        );
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
         Page<Post> postPage = postRepository.findAll(pageable);
         Page<PostDtoSimple> postDtoSimplePage = postPage.map(postDtoMapper::toDtoSimple);
