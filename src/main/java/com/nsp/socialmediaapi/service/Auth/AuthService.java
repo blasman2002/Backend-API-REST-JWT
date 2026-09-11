@@ -3,6 +3,7 @@ package com.nsp.socialmediaapi.service.Auth;
 import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.EmailAlreadyInUseException;
 import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.UsernameAlreadyInUseException;
 import com.nsp.socialmediaapi.exception.SecurityException.InvalidRefreshTokenException;
+import com.nsp.socialmediaapi.exception.SecurityException.InvalidLoginCredentialsException;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.model.dto.Login.LoginRequestDto;
 import com.nsp.socialmediaapi.model.dto.Login.LoginResponseDto;
@@ -14,6 +15,7 @@ import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +41,7 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional
     public UserDto registerUser(CreateUserRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new UsernameAlreadyInUseException();
@@ -59,13 +63,17 @@ public class AuthService {
     }
 
     public LoginResponseDto login(LoginRequestDto request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getUserPassword())
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getUserPassword())
+            );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return jwtService.generateTokenResponse(authentication);
+            return jwtService.generateTokenResponse(authentication);
+        } catch (BadCredentialsException e) {
+            throw new InvalidLoginCredentialsException();
+        }
     }
 
     public LoginResponseDto refreshToken(RefreshTokenRequest request) {
