@@ -41,7 +41,7 @@ public class UserController {
 
     @DeleteMapping("me")
     public ResponseEntity<?> deleteUserSelf() {
-        userService.deleteUser();
+        userService.deleteUserSelf();
         return ResponseEntity.noContent().build();
     }
 

@@ -11,6 +11,7 @@ public interface PostService {
     PostDto findPostDtoById(Long id);
     PostDto createPost(CreatePostRequest createPostRequest);
     PageResponse<PostDtoSimple> showUserPosts(Long id, int page, int size);
-    void deletePost(Long id);
+    void deleteOwnPost(Long id);
     PageResponse<PostDtoSimple> showAllRecentPosts(int page, int size);
+    void deletePostFromUser(Long id);
 }

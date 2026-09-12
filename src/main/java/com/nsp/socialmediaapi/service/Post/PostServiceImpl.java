@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +68,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void deletePost(Long id) {
+    public void deleteOwnPost(Long id) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userService.findByUsername(currentUsername);
@@ -103,6 +104,19 @@ public class PostServiceImpl implements PostService {
         Page<PostDtoSimple> postDtoSimplePage = postPage.map(postDtoMapper::toDtoSimple);
 
         return pageMapper.toPageResponse(postDtoSimplePage);
+    }
+
+    //ADMIN USER
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void deletePostFromUser(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(
+                PostNotFoundException::new
+        );
+
+        postRepository.delete(post);
     }
 
 }

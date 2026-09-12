@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -53,6 +54,14 @@ public class GlobalExceptionHandler {
             HttpServletRequest request
     ) {
         return responseBuilder.buildResponse(e, HttpStatus.UNAUTHORIZED, request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(
+            AccessDeniedException e,
+            HttpServletRequest request
+    ) {
+        return responseBuilder.buildResponse(e, HttpStatus.FORBIDDEN, request);
     }
 
 }

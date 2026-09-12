@@ -5,5 +5,5 @@ import com.nsp.socialmediaapi.model.entity.User;
 public interface UserService {
     User findById(Long id);
     User findByUsername(String username);
-    void deleteUser();
+    void deleteUserSelf();
 }

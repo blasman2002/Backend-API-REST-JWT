@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUser() {
+    public void deleteUserSelf() {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByUsername(currentUsername).orElseThrow(
