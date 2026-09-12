@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -96,6 +97,27 @@ public class CommentServiceImpl implements CommentService {
         Page<CommentDto> commentDtoPage = commentsPage.map(commentDtoMapper::toDto);
 
         return pageMapper.toPageResponse(commentDtoPage);
+    }
+
+    //ADMIN USER
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void deleteUserCommentFromPost(Long postId, Long commentId) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                PostNotFoundException::new
+        );
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                CommentNotFoundException::new
+        );
+
+        if (!comment.getPost().getId().equals(post.getId())) {
+            throw new CommentDoesNotBelongToPostException();
+        }
+
+        commentRepository.delete(comment);
     }
 
 }

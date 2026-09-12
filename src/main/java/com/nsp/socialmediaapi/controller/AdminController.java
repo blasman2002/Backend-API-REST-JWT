@@ -1,5 +1,6 @@
 package com.nsp.socialmediaapi.controller;
 
+import com.nsp.socialmediaapi.service.Comment.CommentService;
 import com.nsp.socialmediaapi.service.Post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +16,17 @@ public class AdminController {
 
     private final PostService postService;
 
+    private final CommentService commentService;
+
     @DeleteMapping("posts/{id}")
     public ResponseEntity<?> deletePostFromUser(@PathVariable Long id) {
         postService.deletePostFromUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("posts/{postId}/comments/{commentId}")
+    public ResponseEntity<?> deleteUserCommentFromPost(@PathVariable Long postId, @PathVariable Long commentId) {
+        commentService.deleteUserCommentFromPost(postId, commentId);
         return ResponseEntity.noContent().build();
     }
 
