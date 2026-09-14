@@ -10,6 +10,7 @@ import com.nsp.socialmediaapi.model.repository.LikeRepository;
 import com.nsp.socialmediaapi.service.Post.PostService;
 import com.nsp.socialmediaapi.service.User.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ public class LikeServiceImpl implements LikeService {
     private final LikeRepository likeRepository;
 
     @Override
+    @PreAuthorize("@userSecurityService.isActive(authentication)")
     @Transactional
     public void giveLikeToPost(Long id) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();

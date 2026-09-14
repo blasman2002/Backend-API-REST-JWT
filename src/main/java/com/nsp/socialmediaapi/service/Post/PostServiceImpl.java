@@ -50,6 +50,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @PreAuthorize("@userSecurityService.isActive(authentication)")
     @Transactional
     public PostDto createPost(CreatePostRequest request) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -109,7 +110,7 @@ public class PostServiceImpl implements PostService {
     //ADMIN USER
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and @userSecurityService.isActive(authentication)")
     @Transactional
     public void deletePostFromUser(Long id) {
         Post post = postRepository.findById(id).orElseThrow(

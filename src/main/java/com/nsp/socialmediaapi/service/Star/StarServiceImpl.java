@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ public class StarServiceImpl implements StarService {
     private final PageMapper pageMapper;
 
     @Override
+    @PreAuthorize("userSecurityService.isActive(authentication)")
     @Transactional
     public void giveStar(Long id) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();

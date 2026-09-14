@@ -1,5 +1,6 @@
 package com.nsp.socialmediaapi.service.User;
 
+import com.nsp.socialmediaapi.model.enm.Status;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +25,12 @@ public class CustomUserDetailsService implements UserDetailsService {
                 () -> new UsernameNotFoundException("user not found with username: " + username)
         );
 
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getUserPassword(),
-                getAuthority(user)
-        );
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUsername())
+                .password(user.getUserPassword())
+                .authorities(getAuthority(user))
+                .disabled(user.getStatus() == Status.DISABLED)
+                .build();
     }
 
     private Collection<? extends GrantedAuthority> getAuthority(User user) {

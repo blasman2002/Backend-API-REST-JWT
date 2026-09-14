@@ -48,18 +48,20 @@ public class JwtService {
     }
 
     public boolean isValidToken(String token, UserDetails userDetails) {
-        final String username = getUsernameFromToken(token);
-
-        if (!username.equals(userDetails.getUsername())) {
-            return false;
-        }
-
         try {
+            final String username = getUsernameFromToken(token);
+
+            if (!username.equals(userDetails.getUsername())) {
+                return false;
+            }
+
             Jwts.parser()
                     .verifyWith(getSignKey())
                     .build()
                     .parseSignedClaims(token);
+
             return true;
+
         } catch (SignatureException e) {
             log.error("Invalid JWT signature: {}", e.getMessage());
         } catch (MalformedJwtException e) {
@@ -75,14 +77,18 @@ public class JwtService {
         return false;
     }
 
-    public boolean isRefreshToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSignKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+    public boolean isValidRefreshToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(getSignKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
 
-        return "refresh".equals(claims.get("tokenType"));
+            return "refresh".equals(claims.get("tokenType"));
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
     public String getUsernameFromToken(String token) {

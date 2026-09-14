@@ -39,6 +39,7 @@ public class CommentServiceImpl implements CommentService {
     private final PageMapper pageMapper;
 
     @Override
+    @PreAuthorize("@userSecurityService.isActive(authentication)")
     @Transactional
     public CommentDto commentPost(Long postId, CommentPostRequest request) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -102,7 +103,7 @@ public class CommentServiceImpl implements CommentService {
     //ADMIN USER
 
     @Override
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and @userSecurityService.isActive(authentication)")
     @Transactional
     public void deleteUserCommentFromPost(Long postId, Long commentId) {
         Post post = postRepository.findById(postId).orElseThrow(

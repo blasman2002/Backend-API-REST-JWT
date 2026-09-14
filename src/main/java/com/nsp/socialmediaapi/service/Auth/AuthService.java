@@ -4,6 +4,7 @@ import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.EmailAlreadyInUs
 import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.UsernameAlreadyInUseException;
 import com.nsp.socialmediaapi.exception.SecurityException.InvalidRefreshTokenException;
 import com.nsp.socialmediaapi.exception.SecurityException.InvalidLoginCredentialsException;
+import com.nsp.socialmediaapi.exception.SecurityException.UserDisabledException;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.model.dto.Login.LoginRequestDto;
 import com.nsp.socialmediaapi.model.dto.Login.LoginResponseDto;
@@ -16,6 +17,7 @@ import com.nsp.socialmediaapi.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,12 +67,16 @@ public class AuthService {
     public LoginResponseDto login(LoginRequestDto request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getUsername(), request.getUserPassword())
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getUserPassword())
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             return jwtService.generateTokenResponse(authentication);
+        } catch (DisabledException e) {
+            throw new UserDisabledException();
         } catch (BadCredentialsException e) {
             throw new InvalidLoginCredentialsException();
         }
@@ -79,13 +85,17 @@ public class AuthService {
     public LoginResponseDto refreshToken(RefreshTokenRequest request) {
         String refreshToken = request.getRefreshToken();
 
-        if (!jwtService.isRefreshToken(refreshToken)) {
+        if (!jwtService.isValidRefreshToken(refreshToken)) {
             throw new InvalidRefreshTokenException();
         }
 
-        String user = jwtService.getUsernameFromToken(refreshToken);
+        String username = jwtService.getUsernameFromToken(refreshToken);
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        if (!userDetails.isEnabled()) {
+            throw new UserDisabledException();
+        }
 
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(

@@ -1,6 +1,7 @@
 package com.nsp.socialmediaapi.exception;
 
 import com.nsp.socialmediaapi.exception.BaseException.*;
+import com.nsp.socialmediaapi.exception.SecurityException.UserDisabledException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -59,6 +60,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ExceptionResponse> handleAccessDeniedException(
             AccessDeniedException e,
+            HttpServletRequest request
+    ) {
+        return responseBuilder.buildResponse(e, HttpStatus.FORBIDDEN, request);
+    }
+
+    @ExceptionHandler(UserDisabledException.class)
+    public  ResponseEntity<ExceptionResponse> handleUserDisabledException(
+            UserDisabledException e,
             HttpServletRequest request
     ) {
         return responseBuilder.buildResponse(e, HttpStatus.FORBIDDEN, request);
