@@ -6,4 +6,5 @@ public interface UserService {
     User findById(Long id);
     User findByUsername(String username);
     void deleteUserSelf();
+    void banUser(Long id);
 }
