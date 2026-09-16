@@ -35,7 +35,7 @@ public class StarServiceImpl implements StarService {
     private final PageMapper pageMapper;
 
     @Override
-    @PreAuthorize("userSecurityService.isActive(authentication)")
+    @PreAuthorize("@userSecurityService.isActive(authentication)")
     @Transactional
     public void giveStar(Long id) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
