@@ -1,10 +1,8 @@
 package com.nsp.socialmediaapi.controller;
 
-import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
 import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
-import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.service.Post.PostService;
 import com.nsp.socialmediaapi.service.User.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +18,9 @@ public class UserController {
 
     private final PostService postService;
 
-    private final UserDtoMapper userDtoMapper;
-
     @GetMapping("{id}")
     public ResponseEntity<UserProfileDto> showUserProfile(@PathVariable Long id) {
-        User foundUser = userService.findById(id);
-        UserProfileDto userProfileDto = userDtoMapper.toProfileDto(foundUser);
-
-        return ResponseEntity.ok(userProfileDto);
+        return ResponseEntity.ok(userService.findUserProfile(id));
     }
 
     @GetMapping("{id}/posts")
