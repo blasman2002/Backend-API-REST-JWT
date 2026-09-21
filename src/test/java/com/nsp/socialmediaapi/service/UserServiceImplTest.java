@@ -25,7 +25,7 @@ public class UserServiceImplTest {
     private UserServiceImpl userService;
 
     public User USER_PREPARED = User.builder()
-            .id(32L)
+            .id(1L)
             .username("username2000")
             .userPassword("pass5000")
             .userDesc("bla bla bla")
@@ -38,7 +38,7 @@ public class UserServiceImplTest {
 
         User userDB = userService.findById(1L);
 
-        assertEquals(32, userDB.getId());
+        assertEquals(1, userDB.getId());
     }
 
 }

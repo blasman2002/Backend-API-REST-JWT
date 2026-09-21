@@ -5,12 +5,10 @@ import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.UsernameAlreadyI
 import com.nsp.socialmediaapi.exception.SecurityException.InvalidRefreshTokenException;
 import com.nsp.socialmediaapi.exception.SecurityException.InvalidLoginCredentialsException;
 import com.nsp.socialmediaapi.exception.SecurityException.UserDisabledException;
-import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.model.dto.Login.LoginRequestDto;
 import com.nsp.socialmediaapi.model.dto.Login.LoginResponseDto;
 import com.nsp.socialmediaapi.model.dto.Login.RefreshTokenRequest;
 import com.nsp.socialmediaapi.model.dto.User.CreateUserRequest;
-import com.nsp.socialmediaapi.model.dto.User.UserDto;
 import com.nsp.socialmediaapi.model.enm.Role;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
@@ -33,8 +31,6 @@ public class AuthService {
 
     private final UserRepository userRepository;
 
-    private final UserDtoMapper userDtoMapper;
-
     private final AuthenticationManager authenticationManager;
 
     private final JwtService jwtService;
@@ -44,7 +40,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserDto registerUser(CreateUserRequest request) {
+    public void registerUser(CreateUserRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new UsernameAlreadyInUseException();
         }
@@ -59,9 +55,7 @@ public class AuthService {
         u.setUserPassword(passwordEncoder.encode(request.getUserPassword()));
         u.setRole(Role.USER);
 
-        User saved = userRepository.save(u);
-
-        return userDtoMapper.toDto(saved);
+        userRepository.save(u);
     }
 
     public LoginResponseDto login(LoginRequestDto request) {
