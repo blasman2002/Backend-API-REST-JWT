@@ -3,9 +3,11 @@ package com.nsp.socialmediaapi.service;
 import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.EmailAlreadyInUseException;
 import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.UsernameAlreadyInUseException;
 import com.nsp.socialmediaapi.exception.SecurityException.InvalidLoginCredentialsException;
+import com.nsp.socialmediaapi.exception.SecurityException.InvalidRefreshTokenException;
 import com.nsp.socialmediaapi.exception.SecurityException.UserDisabledException;
 import com.nsp.socialmediaapi.model.dto.Login.LoginRequestDto;
 import com.nsp.socialmediaapi.model.dto.Login.LoginResponseDto;
+import com.nsp.socialmediaapi.model.dto.Login.RefreshTokenRequest;
 import com.nsp.socialmediaapi.model.dto.User.CreateUserRequest;
 import com.nsp.socialmediaapi.model.enm.Role;
 import com.nsp.socialmediaapi.model.entity.User;
@@ -21,6 +23,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,6 +46,9 @@ public class AuthServiceTest {
 
     @Mock
     JwtService jwtService;
+
+    @Mock
+    UserDetailsService userDetailsService;
 
     @InjectMocks
     AuthService authService;
@@ -168,6 +175,82 @@ public class AuthServiceTest {
         );
 
         verify(jwtService, never()).generateTokenResponse(any());
+    }
+
+    @Test
+    public void refreshToken_shouldReturnNewToken_whenRefreshTokenIsValid() {
+
+        String refreshToken = "refresh";
+        String username = "username";
+        String accessToken = "access";
+
+        RefreshTokenRequest request = new RefreshTokenRequest(refreshToken);
+
+        UserDetails userDetails = mock(UserDetails.class);
+
+        when(jwtService.isValidRefreshToken(refreshToken)).thenReturn(true);
+        when(jwtService.getUsernameFromToken(refreshToken)).thenReturn(username);
+        when(userDetailsService.loadUserByUsername(username)).thenReturn(userDetails);
+
+        when(userDetails.isEnabled()).thenReturn(true);
+
+        when(jwtService.generateAccessToken(any(Authentication.class))).thenReturn(accessToken);
+
+        LoginResponseDto response = authService.refreshToken(request);
+
+        assertEquals(accessToken, response.getToken());
+        assertEquals(refreshToken, response.getRefreshToken());
+
+        verify(jwtService).isValidRefreshToken(refreshToken);
+        verify(jwtService).getUsernameFromToken(refreshToken);
+        verify(userDetailsService).loadUserByUsername(username);
+        verify(jwtService).generateAccessToken(any(Authentication.class));
+    }
+
+    @Test
+    public void refreshToken_shouldThrowException_whenRefreshTokenIsInvalid() {
+
+        String refreshToken = "refresh";
+
+        RefreshTokenRequest request = new RefreshTokenRequest(refreshToken);
+
+        when(jwtService.isValidRefreshToken(refreshToken)).thenReturn(false);
+
+        assertThrows(
+                InvalidRefreshTokenException.class,
+                () -> authService.refreshToken(request)
+        );
+
+        verify(jwtService).isValidRefreshToken(refreshToken);
+
+        verify(jwtService, never()).getUsernameFromToken(anyString());
+        verify(userDetailsService, never()).loadUserByUsername(anyString());
+        verify(jwtService, never()).generateAccessToken(any(Authentication.class));
+    }
+
+    @Test
+    public void refreshToken_shouldThrowException_whenUserIsDisabled() {
+        String refreshToken = "refresh";
+        String username = "username";
+
+        RefreshTokenRequest request = new RefreshTokenRequest(refreshToken);
+
+        UserDetails userDetails = mock(UserDetails.class);
+
+        when(jwtService.isValidRefreshToken(refreshToken)).thenReturn(true);
+        when(jwtService.getUsernameFromToken(refreshToken)).thenReturn(username);
+        when(userDetailsService.loadUserByUsername(username)).thenReturn(userDetails);
+
+        when(userDetails.isEnabled()).thenReturn(false);
+
+        assertThrows(
+                UserDisabledException.class,
+                () -> authService.refreshToken(request)
+        );
+
+        verify(userDetails).isEnabled();
+
+        verify(jwtService, never()).generateAccessToken(any(Authentication.class));
     }
 
 }
