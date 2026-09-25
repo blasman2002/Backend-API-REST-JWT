@@ -69,6 +69,8 @@ public class AuthServiceTest {
             .refreshToken("refresh")
             .build();
 
+    //REGISTER USER TESTS
+
     @Test
     public void registerUser_shouldRegisterUserSuccessfully() {
 
@@ -113,6 +115,8 @@ public class AuthServiceTest {
 
         verify(userRepository, never()).save(any(User.class));
     }
+
+    //LOGIN TESTS
 
     @Test
     public void login_shouldReturnToken_whenCredentialsAreValid() {
@@ -177,6 +181,8 @@ public class AuthServiceTest {
         verify(jwtService, never()).generateTokenResponse(any());
     }
 
+    //REFRESH TOKEN TESTS
+
     @Test
     public void refreshToken_shouldReturnNewToken_whenRefreshTokenIsValid() {
 
@@ -230,6 +236,7 @@ public class AuthServiceTest {
 
     @Test
     public void refreshToken_shouldThrowException_whenUserIsDisabled() {
+
         String refreshToken = "refresh";
         String username = "username";
 

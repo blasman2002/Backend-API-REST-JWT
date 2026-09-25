@@ -1,5 +1,8 @@
 package com.nsp.socialmediaapi.service;
 
+import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
+import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
+import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
 import com.nsp.socialmediaapi.model.enm.Role;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
@@ -13,13 +16,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private UserDtoMapper userDtoMapper;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -32,13 +39,45 @@ public class UserServiceImplTest {
             .role(Role.USER)
             .build();
 
+    public UserProfileDto USER_PROFILE_PREPARED = UserProfileDto.builder()
+            .id(1L)
+            .username("username2000")
+            .userDesc("bla bla bla")
+            .starsCount(32L)
+            .build();
+
     @Test
-    void findById() {
+    void findById_shouldReturnPreparedUser() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(USER_PREPARED));
 
         User userDB = userService.findById(1L);
 
         assertEquals(1, userDB.getId());
+    }
+
+    @Test
+    void findById_shouldThrowException_whenUserNotFound() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(
+                UserNotFoundException.class,
+                () -> userService.findById(1L)
+        );
+
+        verify(userRepository).findById(1L);
+    }
+
+    @Test
+    void findUserProfile_shouldReturnUserProfileDto() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(USER_PREPARED));
+
+        when(userDtoMapper.toProfileDto(USER_PREPARED)).thenReturn(USER_PROFILE_PREPARED);
+
+        UserProfileDto userProfileDto = userService.findUserProfile(1L);
+
+        verify(userDtoMapper).toProfileDto(USER_PREPARED);
+
+        assertEquals(USER_PROFILE_PREPARED, userProfileDto);
     }
 
 }
