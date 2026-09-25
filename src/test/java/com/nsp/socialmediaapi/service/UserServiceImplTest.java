@@ -80,4 +80,16 @@ public class UserServiceImplTest {
         assertEquals(USER_PROFILE_PREPARED, userProfileDto);
     }
 
+    @Test
+    void findUserProfile_shouldThrowException_whenUserNotFound() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(
+                UserNotFoundException.class,
+                () -> userService.findById(1L)
+        );
+
+        verify(userRepository).findById(1L);
+    }
+
 }
