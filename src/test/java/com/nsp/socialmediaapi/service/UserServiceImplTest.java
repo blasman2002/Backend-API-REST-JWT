@@ -12,6 +12,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Optional;
 
@@ -90,6 +93,47 @@ public class UserServiceImplTest {
         );
 
         verify(userRepository).findById(1L);
+    }
+
+    @Test
+    void deleteUserSelf_shouldDeleteUser() {
+        Authentication authentication = mock(Authentication.class);
+
+        when(authentication.getName()).thenReturn(USER_PREPARED.getUsername());
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+
+        when(userRepository.findByUsername(USER_PREPARED.getUsername())).thenReturn(Optional.of(USER_PREPARED));
+
+        userService.deleteUserSelf();
+
+        verify(userRepository).delete(USER_PREPARED);
+    }
+
+    @Test
+    void deleteUserSelf_shouldThrowException_whenUserNotFound() {
+        Authentication authentication = mock(Authentication.class);
+
+        when(authentication.getName()).thenReturn(USER_PREPARED.getUsername());
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+
+        when(userRepository.findByUsername(USER_PREPARED.getUsername())).thenReturn(Optional.empty());
+
+        assertThrows(
+                UserNotFoundException.class,
+                () -> userService.deleteUserSelf()
+        );
+
+        verify(userRepository, never()).delete(any(User.class));
     }
 
 }
