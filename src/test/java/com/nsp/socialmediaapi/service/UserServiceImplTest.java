@@ -1,9 +1,12 @@
 package com.nsp.socialmediaapi.service;
 
+import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.UserAlreadyBannedException;
+import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.SelfBanNotAllowedException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
 import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
 import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
 import com.nsp.socialmediaapi.model.enm.Role;
+import com.nsp.socialmediaapi.model.enm.Status;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
 import com.nsp.socialmediaapi.service.User.UserServiceImpl;
@@ -37,9 +40,22 @@ public class UserServiceImplTest {
     public User USER_PREPARED = User.builder()
             .id(1L)
             .username("username2000")
-            .userPassword("pass5000")
-            .userDesc("bla bla bla")
             .role(Role.USER)
+            .status(Status.ACTIVE)
+            .build();
+
+    public User BANNED_USER_PREPARED = User.builder()
+            .id(3L)
+            .username("username_banned")
+            .role(Role.USER)
+            .status(Status.BANNED)
+            .build();
+
+    public User ADMIN_PREPARED = User.builder()
+            .id(2L)
+            .username("admin2000")
+            .role(Role.ADMIN)
+            .status(Status.ACTIVE)
             .build();
 
     public UserProfileDto USER_PROFILE_PREPARED = UserProfileDto.builder()
@@ -48,6 +64,18 @@ public class UserServiceImplTest {
             .userDesc("bla bla bla")
             .starsCount(32L)
             .build();
+
+    private void setAuthenticatedUser(User u) {
+        Authentication authentication = mock(Authentication.class);
+
+        when(authentication.getName()).thenReturn(u.getUsername());
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+    }
 
     @Test
     void findById_shouldReturnPreparedUser() {
@@ -97,15 +125,7 @@ public class UserServiceImplTest {
 
     @Test
     void deleteUserSelf_shouldDeleteUser() {
-        Authentication authentication = mock(Authentication.class);
-
-        when(authentication.getName()).thenReturn(USER_PREPARED.getUsername());
-
-        SecurityContext securityContext = mock(SecurityContext.class);
-
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        SecurityContextHolder.setContext(securityContext);
+        setAuthenticatedUser(USER_PREPARED);
 
         when(userRepository.findByUsername(USER_PREPARED.getUsername())).thenReturn(Optional.of(USER_PREPARED));
 
@@ -116,15 +136,7 @@ public class UserServiceImplTest {
 
     @Test
     void deleteUserSelf_shouldThrowException_whenUserNotFound() {
-        Authentication authentication = mock(Authentication.class);
-
-        when(authentication.getName()).thenReturn(USER_PREPARED.getUsername());
-
-        SecurityContext securityContext = mock(SecurityContext.class);
-
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-
-        SecurityContextHolder.setContext(securityContext);
+        setAuthenticatedUser(USER_PREPARED);
 
         when(userRepository.findByUsername(USER_PREPARED.getUsername())).thenReturn(Optional.empty());
 
@@ -134,6 +146,54 @@ public class UserServiceImplTest {
         );
 
         verify(userRepository, never()).delete(any(User.class));
+    }
+
+    @Test
+    void banUser_shouldSuccessfullyBanUser() {
+        setAuthenticatedUser(ADMIN_PREPARED);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(USER_PREPARED));
+
+        userService.banUser(1L);
+
+        assertEquals(Status.BANNED, USER_PREPARED.getStatus());
+    }
+
+    @Test
+    void banUser_shouldThrowException_ifUserNotFound() {
+        setAuthenticatedUser(ADMIN_PREPARED);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(
+                UserNotFoundException.class,
+                () -> userService.banUser(1L)
+        );
+
+    }
+
+    @Test
+    void banUser_shouldThrowException_ifUserAlreadyBanned() {
+        setAuthenticatedUser(ADMIN_PREPARED);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(BANNED_USER_PREPARED));
+
+        assertThrows(
+                UserAlreadyBannedException.class,
+                () -> userService.banUser(1L)
+        );
+    }
+
+    @Test
+    void banUser_shouldThrowException_ifUserIsSameAsLoggedUser() {
+        setAuthenticatedUser(ADMIN_PREPARED);
+
+        when(userRepository.findById(2L)).thenReturn(Optional.of(ADMIN_PREPARED));
+
+        assertThrows(
+                SelfBanNotAllowedException.class,
+                () -> userService.banUser(2L)
+        );
     }
 
 }
