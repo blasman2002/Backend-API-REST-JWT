@@ -194,6 +194,7 @@ public class UserServiceImplTest {
                 SelfBanNotAllowedException.class,
                 () -> userService.banUser(2L)
         );
+
     }
 
 }
