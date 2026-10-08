@@ -182,9 +182,7 @@ public class StarServiceImplTest {
         PageResponse<StarReceivedDto> expectedResponse = mock(PageResponse.class);
 
         when(starRepository.findByUser1_Id(USER_PREPARED_GIVER.getId(), pageable)).thenReturn(starsPage);
-
         when(starDtoMapper.toStarReceiverDto(star)).thenReturn(starReceivedDto);
-
         when(pageMapper.toPageResponse(starsDtoPage)).thenReturn(expectedResponse);
 
         PageResponse<StarReceivedDto> result = starService.getUserStars(USER_PREPARED_GIVER.getId(), 1, 10);

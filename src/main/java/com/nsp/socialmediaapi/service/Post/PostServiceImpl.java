@@ -74,9 +74,7 @@ public class PostServiceImpl implements PostService {
 
         User user = userService.findByUsername(currentUsername);
 
-        Post post = postRepository.findById(id).orElseThrow(
-                PostNotFoundException::new
-        );
+        Post post = findById(id);
 
         if (!post.getUser().getId().equals(user.getId())) {
             throw new PostDoesNotBelongToUserException();
