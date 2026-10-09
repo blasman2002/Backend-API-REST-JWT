@@ -157,6 +157,11 @@ public class PostServiceImplTest {
         verify(postRepository, never()).delete(any(Post.class));
     }
 
+    //Note to myself: since I get warn with these mocks, I should investigate a better way to do this....
+    // *
+    // * :)
+    // *
+
     @Test
     void showUserPosts_shouldSuccessfullyReturnPagedUserPosts() {
         Pageable pageable = PageRequest.of(1, 10, Sort.by("createdAt").descending());
@@ -231,6 +236,5 @@ public class PostServiceImplTest {
 
         verify(postRepository, never()).delete(any(Post.class));
     }
-
 
 }
