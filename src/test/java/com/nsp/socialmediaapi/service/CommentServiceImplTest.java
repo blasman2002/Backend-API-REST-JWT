@@ -6,6 +6,7 @@ import com.nsp.socialmediaapi.mapper.Comment.CommentDtoMapper;
 import com.nsp.socialmediaapi.mapper.Page.PageMapper;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentPostRequest;
+import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.dto.User.UserDisplayDto;
 import com.nsp.socialmediaapi.model.enm.Role;
 import com.nsp.socialmediaapi.model.entity.Comment;
@@ -21,14 +22,15 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -218,6 +220,47 @@ public class CommentServiceImplTest {
         );
 
         verify(commentRepository, never()).delete(comment);
+    }
+
+    @Test
+    void getAllCommentsFromPost_shouldSuccessfullyGetAllCommentsAndReturnPage() {
+        Pageable pageable = PageRequest.of(1, 10, Sort.by("createdAt").descending());
+
+        Comment comment = mock(Comment.class);
+
+        CommentDto commentDto = mock(CommentDto.class);
+
+        Page<Comment> commentPage = new PageImpl<>(List.of(comment), pageable, 1);
+
+        Page<CommentDto> commentDtoPage = new PageImpl<>(List.of(commentDto), pageable, 1);
+
+        PageResponse<CommentDto> expectedResponse = mock(PageResponse.class);
+
+        when(commentRepository.findByPostId(1L, pageable)).thenReturn(commentPage);
+        when(commentDtoMapper.toDto(comment)).thenReturn(commentDto);
+        when(pageMapper.toPageResponse(commentDtoPage)).thenReturn(expectedResponse);
+
+        PageResponse<CommentDto> result = commentService.getAllCommentsFromPost(1L, 1, 10);
+
+        assertSame(expectedResponse, result);
+
+        verify(commentRepository).findByPostId(1L, pageable);
+        verify(commentDtoMapper).toDto(comment);
+        verify(pageMapper).toPageResponse(commentDtoPage);
+    }
+
+    @Test
+    void deleteUserCommentFromPost_shouldSuccessfullyDeleteUserComment() {
+        Comment comment = Comment.builder()
+                .id(1L)
+                .content("content")
+                .build();
+
+        when(commentRepository.findById(comment.getId())).thenReturn(Optional.of(comment));
+
+        commentService.deleteUserCommentFromPost(1L);
+
+        verify(commentRepository).delete(comment);
     }
 
 }

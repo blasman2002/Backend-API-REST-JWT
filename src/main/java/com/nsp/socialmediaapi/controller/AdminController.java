@@ -24,9 +24,9 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("posts/{postId}/comments/{commentId}")
-    public ResponseEntity<?> deleteUserCommentFromPost(@PathVariable Long postId, @PathVariable Long commentId) {
-        commentService.deleteUserCommentFromPost(postId, commentId);
+    @DeleteMapping("comments/{id}")
+    public ResponseEntity<?> deleteUserCommentFromPost(@PathVariable Long id) {
+        commentService.deleteUserCommentFromPost(id);
         return ResponseEntity.noContent().build();
     }
 

@@ -102,17 +102,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @PreAuthorize("hasRole('ADMIN') and @userSecurityService.isActive(authentication)")
     @Transactional
-    public void deleteUserCommentFromPost(Long postId, Long commentId) {
-        Post post = postService.findById(postId);
-
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                CommentNotFoundException::new
-        );
-
-        if (!comment.getPost().getId().equals(post.getId())) {
-            throw new CommentDoesNotBelongToPostException();
-        }
-
+    public void deleteUserCommentFromPost(Long commentId) {
+        Comment comment = findById(commentId);
         commentRepository.delete(comment);
     }
 
