@@ -42,6 +42,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public void validateExistsById(Long id) {
+        if (!postRepository.existsById(id)) {
+            throw new PostNotFoundException();
+        }
+    }
+
+    @Override
     @Transactional
     public PostDto findPostDtoById(Long id) {
         Post post = findById(id);

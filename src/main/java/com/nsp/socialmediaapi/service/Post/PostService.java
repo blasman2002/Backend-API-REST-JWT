@@ -8,6 +8,7 @@ import com.nsp.socialmediaapi.model.entity.Post;
 
 public interface PostService {
     Post findById(Long id);
+    void validateExistsById(Long id);
     PostDto findPostDtoById(Long id);
     PostDto createPost(CreatePostRequest createPostRequest);
     PageResponse<PostDtoSimple> showUserPosts(Long id, int page, int size);

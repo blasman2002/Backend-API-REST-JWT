@@ -12,8 +12,8 @@ import com.nsp.socialmediaapi.model.entity.Comment;
 import com.nsp.socialmediaapi.model.entity.Post;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.CommentRepository;
-import com.nsp.socialmediaapi.model.repository.PostRepository;
-import com.nsp.socialmediaapi.model.repository.UserRepository;
+import com.nsp.socialmediaapi.service.Post.PostService;
+import com.nsp.socialmediaapi.service.User.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,9 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CommentServiceImpl implements CommentService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    private final PostRepository postRepository;
+    private final PostService postService;
 
     private final CommentRepository commentRepository;
 
@@ -39,23 +39,26 @@ public class CommentServiceImpl implements CommentService {
     private final PageMapper pageMapper;
 
     @Override
+    public Comment findById(Long id) {
+        return commentRepository.findById(id).orElseThrow(
+                CommentNotFoundException::new
+        );
+    }
+
+    @Override
     @PreAuthorize("@userSecurityService.isActive(authentication)")
     @Transactional
     public CommentDto commentPost(Long postId, CommentPostRequest request) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        User user = userRepository.findByUsername(currentUsername).orElseThrow(
-                UserNotFoundException::new
-        );
+        User user = userService.findByUsername(currentUsername);
 
-        Post post = postRepository.findById(postId).orElseThrow(
-                PostNotFoundException::new
-        );
+        Post post = postService.findById(postId);
 
         Comment comment = new Comment();
         comment.setPost(post);
         comment.setUser(user);
-        comment.setContent(post.getContent());
+        comment.setContent(request.getContent());
 
         commentRepository.save(comment);
 
@@ -67,13 +70,9 @@ public class CommentServiceImpl implements CommentService {
     public void deleteCommentFromPost(Long postId, Long commentId) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Post post = postRepository.findById(postId).orElseThrow(
-                PostNotFoundException::new
-        );
+        Post post = postService.findById(postId);
 
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                CommentNotFoundException::new
-        );
+        Comment comment = findById(commentId);
 
         if (!comment.getPost().getId().equals(post.getId())) {
             throw new CommentDoesNotBelongToPostException();
@@ -89,9 +88,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public PageResponse<CommentDto> getAllCommentsFromPost(Long postId, int page, int size) {
-        if (!postRepository.existsById(postId)) {
-            throw new PostNotFoundException();
-        }
+        postService.validateExistsById(postId);
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Comment> commentsPage = commentRepository.findByPostId(postId, pageable);
@@ -106,9 +103,7 @@ public class CommentServiceImpl implements CommentService {
     @PreAuthorize("hasRole('ADMIN') and @userSecurityService.isActive(authentication)")
     @Transactional
     public void deleteUserCommentFromPost(Long postId, Long commentId) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                PostNotFoundException::new
-        );
+        Post post = postService.findById(postId);
 
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 CommentNotFoundException::new
