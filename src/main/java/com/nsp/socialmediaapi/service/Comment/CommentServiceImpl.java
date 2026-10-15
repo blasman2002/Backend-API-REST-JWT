@@ -3,10 +3,10 @@ package com.nsp.socialmediaapi.service.Comment;
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.CommentDoesNotBelongToPostException;
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.CommentDoesNotBelongToUserException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.*;
-import com.nsp.socialmediaapi.mapper.Comment.CommentDtoMapper;
-import com.nsp.socialmediaapi.mapper.Page.PageMapper;
+import com.nsp.socialmediaapi.mapper.CommentMapper;
+import com.nsp.socialmediaapi.mapper.PageMapper;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
-import com.nsp.socialmediaapi.model.dto.Comment.CommentPostRequest;
+import com.nsp.socialmediaapi.model.request.Comment.CommentPostRequest;
 import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.entity.Comment;
 import com.nsp.socialmediaapi.model.entity.Post;
@@ -34,7 +34,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
 
-    private final CommentDtoMapper commentDtoMapper;
+    private final CommentMapper commentMapper;
 
     private final PageMapper pageMapper;
 
@@ -62,7 +62,7 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.save(comment);
 
-        return commentDtoMapper.toDto(comment);
+        return commentMapper.mapToCommentDto(comment);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Comment> commentsPage = commentRepository.findByPostId(postId, pageable);
-        Page<CommentDto> commentDtoPage = commentsPage.map(commentDtoMapper::toDto);
+        Page<CommentDto> commentDtoPage = commentsPage.map(commentMapper::mapToCommentDto);
 
         return pageMapper.toPageResponse(commentDtoPage);
     }

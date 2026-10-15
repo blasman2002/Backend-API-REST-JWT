@@ -2,10 +2,10 @@ package com.nsp.socialmediaapi.service.Post;
 
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.PostDoesNotBelongToUserException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.PostNotFoundException;
-import com.nsp.socialmediaapi.mapper.Page.PageMapper;
-import com.nsp.socialmediaapi.mapper.Post.PostDtoMapper;
+import com.nsp.socialmediaapi.mapper.PageMapper;
+import com.nsp.socialmediaapi.mapper.PostMapper;
 import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
-import com.nsp.socialmediaapi.model.dto.Post.CreatePostRequest;
+import com.nsp.socialmediaapi.model.request.Post.CreatePostRequest;
 import com.nsp.socialmediaapi.model.dto.Post.PostDto;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
 import com.nsp.socialmediaapi.model.entity.Post;
@@ -30,7 +30,7 @@ public class PostServiceImpl implements PostService {
 
     private final UserService userService;
 
-    private final PostDtoMapper postDtoMapper;
+    private final PostMapper postMapper;
 
     private final PageMapper pageMapper;
 
@@ -53,7 +53,7 @@ public class PostServiceImpl implements PostService {
     public PostDto findPostDtoById(Long id) {
         Post post = findById(id);
 
-        return postDtoMapper.toDto(post);
+        return postMapper.mapToPostDto(post);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class PostServiceImpl implements PostService {
 
         postRepository.save(post);
 
-        return postDtoMapper.toDto(post);
+        return postMapper.mapToPostDto(post);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class PostServiceImpl implements PostService {
         userService.findById(id);
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<Post> userPosts = postRepository.findByUserId(id, pageable);
-        Page<PostDtoSimple> userPostsDtoSimple = userPosts.map(postDtoMapper::toDtoSimple);
+        Page<PostDtoSimple> userPostsDtoSimple = userPosts.map(postMapper::mapToPostDtoSimple);
 
         return pageMapper.toPageResponse(userPostsDtoSimple);
     }
@@ -107,7 +107,7 @@ public class PostServiceImpl implements PostService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
 
         Page<Post> postPage = postRepository.findAll(pageable);
-        Page<PostDtoSimple> postDtoSimplePage = postPage.map(postDtoMapper::toDtoSimple);
+        Page<PostDtoSimple> postDtoSimplePage = postPage.map(postMapper::mapToPostDtoSimple);
 
         return pageMapper.toPageResponse(postDtoSimplePage);
     }

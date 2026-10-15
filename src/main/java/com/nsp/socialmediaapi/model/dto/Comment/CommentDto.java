@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 public class CommentDto {
     private Long id;
-    private UserDisplayDto user;
+    private UserDisplayDto userDisplayDto;
     private String content;
     private LocalDateTime createdAt;
 }

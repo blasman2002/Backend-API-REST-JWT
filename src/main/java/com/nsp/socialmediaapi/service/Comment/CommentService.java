@@ -1,7 +1,7 @@
 package com.nsp.socialmediaapi.service.Comment;
 
 import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
-import com.nsp.socialmediaapi.model.dto.Comment.CommentPostRequest;
+import com.nsp.socialmediaapi.model.request.Comment.CommentPostRequest;
 import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.entity.Comment;
 

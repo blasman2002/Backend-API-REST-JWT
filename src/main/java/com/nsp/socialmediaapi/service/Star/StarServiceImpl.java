@@ -3,8 +3,8 @@ package com.nsp.socialmediaapi.service.Star;
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.SelfStarNotAllowedException;
 import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.StarAlreadyExistsException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.StarNotFoundException;
-import com.nsp.socialmediaapi.mapper.Page.PageMapper;
-import com.nsp.socialmediaapi.mapper.Star.StarDtoMapper;
+import com.nsp.socialmediaapi.mapper.PageMapper;
+import com.nsp.socialmediaapi.mapper.StarMapper;
 import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.dto.Star.StarReceivedDto;
 import com.nsp.socialmediaapi.model.entity.Star;
@@ -30,7 +30,7 @@ public class StarServiceImpl implements StarService {
 
     private final UserService userService;
 
-    private final StarDtoMapper starDtoMapper;
+    private final StarMapper starMapper;
 
     private final PageMapper pageMapper;
 
@@ -86,8 +86,8 @@ public class StarServiceImpl implements StarService {
     @Transactional
     public PageResponse<StarReceivedDto> getUserStars(Long userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Star> userStars = starRepository.findByUser1_Id(userId, pageable);
-        Page<StarReceivedDto> userStarsDto = userStars.map(starDtoMapper::toStarReceiverDto);
+        Page<Star> userStars = starRepository.findByUser2_Id(userId, pageable);
+        Page<StarReceivedDto> userStarsDto = userStars.map(starMapper::mapToStarReceivedDto);
 
         return pageMapper.toPageResponse(userStarsDto);
     }

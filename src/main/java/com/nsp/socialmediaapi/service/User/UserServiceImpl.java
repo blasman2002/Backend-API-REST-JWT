@@ -3,10 +3,11 @@ package com.nsp.socialmediaapi.service.User;
 import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.UserAlreadyBannedException;
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.SelfBanNotAllowedException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
-import com.nsp.socialmediaapi.mapper.User.UserDtoMapper;
+import com.nsp.socialmediaapi.mapper.UserMapper;
 import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
 import com.nsp.socialmediaapi.model.enm.Status;
 import com.nsp.socialmediaapi.model.entity.User;
+import com.nsp.socialmediaapi.model.repository.StarRepository;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,7 +21,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    private final UserDtoMapper userDtoMapper;
+    private final UserMapper userMapper;
+
+    private final StarRepository starRepository;
 
     @Override
     public User findById(Long id) {
@@ -35,7 +38,9 @@ public class UserServiceImpl implements UserService {
                 UserNotFoundException::new
         );
 
-        return userDtoMapper.toProfileDto(user);
+        Long starsCount = starRepository.countByUser2_Id(user.getId());
+
+        return userMapper.mapToUserProfileDto(user, starsCount);
     }
 
     @Override

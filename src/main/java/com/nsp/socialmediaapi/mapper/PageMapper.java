@@ -1,4 +1,4 @@
-package com.nsp.socialmediaapi.mapper.Page;
+package com.nsp.socialmediaapi.mapper;
 
 import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import org.springframework.data.domain.Page;
@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PageMapper {
+
+    //This mapper class stays
 
     public <T> PageResponse<T> toPageResponse(Page<T> page) {
         return PageResponse.<T>builder()

@@ -2,10 +2,10 @@ package com.nsp.socialmediaapi.service;
 
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.CommentDoesNotBelongToPostException;
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.CommentDoesNotBelongToUserException;
-import com.nsp.socialmediaapi.mapper.Comment.CommentDtoMapper;
-import com.nsp.socialmediaapi.mapper.Page.PageMapper;
+import com.nsp.socialmediaapi.mapper.CommentMapper;
+import com.nsp.socialmediaapi.mapper.PageMapper;
 import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
-import com.nsp.socialmediaapi.model.dto.Comment.CommentPostRequest;
+import com.nsp.socialmediaapi.model.request.Comment.CommentPostRequest;
 import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.dto.User.UserDisplayDto;
 import com.nsp.socialmediaapi.model.enm.Role;
@@ -46,7 +46,7 @@ public class CommentServiceImplTest {
     private CommentRepository commentRepository;
 
     @Mock
-    private CommentDtoMapper commentDtoMapper;
+    private CommentMapper commentMapper;
 
     @Mock
     private PageMapper pageMapper;
@@ -104,11 +104,11 @@ public class CommentServiceImplTest {
         CommentDto commentDto = CommentDto.builder()
                 .id(comment.getId())
                 .content(comment.getContent())
-                .user(userDto)
+                .userDisplayDto(userDto)
                 .build();
 
         when(postService.findById(post.getId())).thenReturn(post);
-        when(commentDtoMapper.toDto(any(Comment.class))).thenReturn(commentDto);
+        when(commentMapper.mapToCommentDto(any(Comment.class))).thenReturn(commentDto);
 
         CommentDto result = commentService.commentPost(post.getId(), request);
 
@@ -116,7 +116,7 @@ public class CommentServiceImplTest {
 
         verify(postService).findById(post.getId());
         verify(commentRepository).save(commentArgumentCaptor.capture());
-        verify(commentDtoMapper).toDto(commentArgumentCaptor.getValue());
+        verify(commentMapper).mapToCommentDto(commentArgumentCaptor.getValue());
 
         Comment savedComment = commentArgumentCaptor.getValue();
 
@@ -126,7 +126,7 @@ public class CommentServiceImplTest {
 
         assertEquals(commentDto.getId(), result.getId());
         assertEquals(commentDto.getContent(), result.getContent());
-        assertEquals(commentDto.getUser(), result.getUser());
+        assertEquals(commentDto.getUserDisplayDto(), result.getUserDisplayDto());
     }
 
     @Test
@@ -237,7 +237,7 @@ public class CommentServiceImplTest {
         PageResponse<CommentDto> expectedResponse = mock(PageResponse.class);
 
         when(commentRepository.findByPostId(1L, pageable)).thenReturn(commentPage);
-        when(commentDtoMapper.toDto(comment)).thenReturn(commentDto);
+        when(commentMapper.mapToCommentDto(comment)).thenReturn(commentDto);
         when(pageMapper.toPageResponse(commentDtoPage)).thenReturn(expectedResponse);
 
         PageResponse<CommentDto> result = commentService.getAllCommentsFromPost(1L, 1, 10);
@@ -245,7 +245,7 @@ public class CommentServiceImplTest {
         assertSame(expectedResponse, result);
 
         verify(commentRepository).findByPostId(1L, pageable);
-        verify(commentDtoMapper).toDto(comment);
+        verify(commentMapper).mapToCommentDto(comment);
         verify(pageMapper).toPageResponse(commentDtoPage);
     }
 

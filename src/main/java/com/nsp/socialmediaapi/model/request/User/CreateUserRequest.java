@@ -1,4 +1,4 @@
-package com.nsp.socialmediaapi.model.dto.User;
+package com.nsp.socialmediaapi.model.request.User;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

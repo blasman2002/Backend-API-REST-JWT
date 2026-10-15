@@ -1,9 +1,9 @@
 package com.nsp.socialmediaapi.controller;
 
-import com.nsp.socialmediaapi.model.dto.Login.LoginRequestDto;
+import com.nsp.socialmediaapi.model.request.Login.LoginRequestDto;
 import com.nsp.socialmediaapi.model.dto.Login.LoginResponseDto;
-import com.nsp.socialmediaapi.model.dto.Login.RefreshTokenRequest;
-import com.nsp.socialmediaapi.model.dto.User.CreateUserRequest;
+import com.nsp.socialmediaapi.model.request.Login.RefreshTokenRequest;
+import com.nsp.socialmediaapi.model.request.User.CreateUserRequest;
 import com.nsp.socialmediaapi.service.Auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

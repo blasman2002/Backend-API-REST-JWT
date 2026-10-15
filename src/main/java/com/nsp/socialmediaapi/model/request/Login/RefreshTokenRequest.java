@@ -1,4 +1,4 @@
-package com.nsp.socialmediaapi.model.dto.Login;
+package com.nsp.socialmediaapi.model.request.Login;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

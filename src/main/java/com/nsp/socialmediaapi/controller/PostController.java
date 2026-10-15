@@ -1,7 +1,7 @@
 package com.nsp.socialmediaapi.controller;
 
 import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
-import com.nsp.socialmediaapi.model.dto.Post.CreatePostRequest;
+import com.nsp.socialmediaapi.model.request.Post.CreatePostRequest;
 import com.nsp.socialmediaapi.model.dto.Post.PostDto;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
 import com.nsp.socialmediaapi.service.Post.PostService;

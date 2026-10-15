@@ -2,10 +2,10 @@ package com.nsp.socialmediaapi.service;
 
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.PostDoesNotBelongToUserException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.PostNotFoundException;
-import com.nsp.socialmediaapi.mapper.Page.PageMapper;
-import com.nsp.socialmediaapi.mapper.Post.PostDtoMapper;
+import com.nsp.socialmediaapi.mapper.PageMapper;
+import com.nsp.socialmediaapi.mapper.PostMapper;
 import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
-import com.nsp.socialmediaapi.model.dto.Post.CreatePostRequest;
+import com.nsp.socialmediaapi.model.request.Post.CreatePostRequest;
 import com.nsp.socialmediaapi.model.dto.Post.PostDto;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
 import com.nsp.socialmediaapi.model.enm.Role;
@@ -40,7 +40,7 @@ public class PostServiceImplTest {
     private UserService userService;
 
     @Mock
-    private PostDtoMapper postDtoMapper;
+    private PostMapper postMapper;
 
     @Mock
     private PageMapper pageMapper;
@@ -110,13 +110,13 @@ public class PostServiceImplTest {
                 .content(PREPARED_POST.getContent())
                 .build();
 
-        when(postDtoMapper.toDto(any(Post.class))).thenReturn(dto);
+        when(postMapper.mapToPostDto(any(Post.class))).thenReturn(dto);
 
         PostDto result = postService.createPost(PREPARED_CREATE_REQUEST);
 
         verify(userService).findByUsername(PREPARED_USER.getUsername());
         verify(postRepository).save(any(Post.class));
-        verify(postDtoMapper).toDto(any(Post.class));
+        verify(postMapper).mapToPostDto(any(Post.class));
 
         assertEquals(PREPARED_POST.getId(), result.getId());
         assertEquals(PREPARED_POST.getTitle(), result.getTitle());
@@ -177,7 +177,7 @@ public class PostServiceImplTest {
         PageResponse<PostDtoSimple> expectedResponse = mock(PageResponse.class);
 
         when(postRepository.findByUserId(PREPARED_USER.getId(), pageable)).thenReturn(postPage);
-        when(postDtoMapper.toDtoSimple(post)).thenReturn(postDtoSimple);
+        when(postMapper.mapToPostDtoSimple(post)).thenReturn(postDtoSimple);
         when(pageMapper.toPageResponse(postDtoPage)).thenReturn(expectedResponse);
 
         PageResponse<PostDtoSimple> result = postService.showUserPosts(PREPARED_USER.getId(), 1, 10);
@@ -185,7 +185,7 @@ public class PostServiceImplTest {
         assertSame(expectedResponse, result);
 
         verify(postRepository).findByUserId(PREPARED_USER.getId(), pageable);
-        verify(postDtoMapper).toDtoSimple(post);
+        verify(postMapper).mapToPostDtoSimple(post);
         verify(pageMapper).toPageResponse(postDtoPage);
     }
 
@@ -204,7 +204,7 @@ public class PostServiceImplTest {
         PageResponse<PostDtoSimple> expectedResponse = mock(PageResponse.class);
 
         when(postRepository.findAll(pageable)).thenReturn(postPage);
-        when(postDtoMapper.toDtoSimple(post)).thenReturn(postDtoSimple);
+        when(postMapper.mapToPostDtoSimple(post)).thenReturn(postDtoSimple);
         when(pageMapper.toPageResponse(postDtoPage)).thenReturn(expectedResponse);
 
         PageResponse<PostDtoSimple> result = postService.showAllRecentPosts(1, 10);
@@ -212,7 +212,7 @@ public class PostServiceImplTest {
         assertSame(expectedResponse, result);
 
         verify(postRepository).findAll(pageable);
-        verify(postDtoMapper).toDtoSimple(post);
+        verify(postMapper).mapToPostDtoSimple(post);
         verify(pageMapper).toPageResponse(postDtoPage);
     }
 

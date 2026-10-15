@@ -1,4 +1,4 @@
-package com.nsp.socialmediaapi.model.dto.Login;
+package com.nsp.socialmediaapi.model.request.Login;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
