@@ -11,6 +11,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Embeddable
 public class StarId implements Serializable {
     @Column(name = "user1_id")

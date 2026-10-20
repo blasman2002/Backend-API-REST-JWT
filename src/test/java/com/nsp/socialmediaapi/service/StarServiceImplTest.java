@@ -5,8 +5,6 @@ import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.SelfStarNotAll
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.StarNotFoundException;
 import com.nsp.socialmediaapi.mapper.PageMapper;
 import com.nsp.socialmediaapi.mapper.StarMapper;
-import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
-import com.nsp.socialmediaapi.model.dto.Star.StarReceivedDto;
 import com.nsp.socialmediaapi.model.enm.Role;
 import com.nsp.socialmediaapi.model.enm.Status;
 import com.nsp.socialmediaapi.model.entity.Star;
@@ -25,9 +23,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
