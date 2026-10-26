@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class PageMapper {
 
-    //This mapper class stays
-
     public <T> PageResponse<T> toPageResponse(Page<T> page) {
         return PageResponse.<T>builder()
                 .content(page.getContent())
