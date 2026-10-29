@@ -58,7 +58,7 @@ public class AuthControllerTest {
             .build();
 
     @Test
-    void registerUser_shouldReturnStringMessageUserCreated() throws Exception {
+    void registerUser_shouldReturnCreated() throws Exception {
         doNothing().when(authService).registerUser(any(CreateUserRequest.class));
 
         mockMvc.perform(post("/api/v1/auth/register")
@@ -71,7 +71,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void registerUser_shouldThrowException_whenUsernameAlreadyInUse() throws Exception {
+    void registerUser_shouldReturnConflict_whenUsernameAlreadyInUse() throws Exception {
         doThrow(new UsernameAlreadyInUseException()).when(authService).registerUser(any(CreateUserRequest.class));
 
         mockMvc.perform(post("/api/v1/auth/register")
@@ -81,7 +81,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void registerUser_shouldThrowException_whenEmailAlreadyInUse() throws Exception {
+    void registerUser_shouldReturnConflict_whenEmailAlreadyInUse() throws Exception {
         doThrow(new EmailAlreadyInUseException()).when(authService).registerUser(any(CreateUserRequest.class));
 
         mockMvc.perform(post("/api/v1/auth/register")
@@ -91,7 +91,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void login_shouldCorrectlyReturnTokenResponse() throws Exception {
+    void login_shouldReturnTokenResponse() throws Exception {
         LoginResponseDto response = LoginResponseDto.builder()
                 .token("login-token")
                 .refreshToken("refresh-token")
@@ -110,7 +110,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void login_shouldThrowException_whenUserIsDisabled() throws Exception {
+    void login_shouldReturnForbidden_whenUserIsDisabled() throws Exception {
         doThrow(new UserDisabledException()).when(authService).login(any(LoginRequestDto.class));
 
         mockMvc.perform(post("/api/v1/auth/login")
@@ -120,7 +120,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void login_shouldThrowException_whenCredentialsAreInvalid() throws Exception {
+    void login_shouldReturnUnauthorized_whenCredentialsAreInvalid() throws Exception {
         doThrow(new InvalidLoginCredentialsException()).when(authService).login(any(LoginRequestDto.class));
 
         mockMvc.perform(post("/api/v1/auth/login")
@@ -130,7 +130,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void refreshToken_shouldCorrectlyReturnNewToken() throws Exception {
+    void refreshToken_shouldReturnNewToken() throws Exception {
         RefreshTokenRequest request = new RefreshTokenRequest("refresh-token");
 
         LoginResponseDto response = LoginResponseDto.builder()
@@ -151,7 +151,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    void refreshToken_shouldThrowException_whenTokenIsNotValid() throws Exception {
+    void refreshToken_shouldReturnUnauthorized_whenTokenIsNotValid() throws Exception {
         RefreshTokenRequest request = new RefreshTokenRequest("refresh-token");
 
         doThrow(new InvalidLoginCredentialsException()).when(authService).refreshToken(any(RefreshTokenRequest.class));

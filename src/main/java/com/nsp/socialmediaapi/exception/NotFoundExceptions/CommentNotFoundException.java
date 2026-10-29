@@ -1,6 +1,8 @@
 package com.nsp.socialmediaapi.exception.NotFoundExceptions;
 
-public class CommentNotFoundException extends RuntimeException {
+import com.nsp.socialmediaapi.exception.BaseException.ResourceNotFoundException;
+
+public class CommentNotFoundException extends ResourceNotFoundException {
     public CommentNotFoundException() {
         super("comment not found");
     }

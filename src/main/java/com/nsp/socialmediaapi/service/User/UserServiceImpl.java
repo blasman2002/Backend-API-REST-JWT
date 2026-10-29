@@ -70,9 +70,7 @@ public class UserServiceImpl implements UserService {
     public void banUser(Long id) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        User user = userRepository.findById(id).orElseThrow(
-                UserNotFoundException::new
-        );
+        User user = findById(id);
 
         if (user.getStatus().equals(Status.BANNED)) {
             throw new UserAlreadyBannedException();

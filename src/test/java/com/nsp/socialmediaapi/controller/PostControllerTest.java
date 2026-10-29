@@ -45,7 +45,7 @@ public class PostControllerTest {
     private JwtService jwtService;
 
     @Test
-    void createPost_shouldCorrectlyCreatePostAndReturnDto() throws Exception {
+    void createPost_shouldReturnDto() throws Exception {
         CreatePostRequest request = CreatePostRequest.builder()
                 .title("title")
                 .content("content")
@@ -71,7 +71,7 @@ public class PostControllerTest {
     }
 
     @Test
-    void deleteOwnPost_shouldCorrectlyDeletePost() throws Exception {
+    void deleteOwnPost_shouldReturnNoContent() throws Exception {
         doNothing().when(postService).deleteOwnPost(1L);
 
         mockMvc.perform(delete("/api/v1/posts/1"))
@@ -81,7 +81,7 @@ public class PostControllerTest {
     }
 
     @Test
-    void deleteOwnPost_shouldThrowException_whenPostDoesNotBelongToLoggedUser() throws Exception {
+    void deleteOwnPost_shouldReturnBadRequest_whenPostDoesNotBelongToLoggedUser() throws Exception {
         doThrow(new PostDoesNotBelongToUserException()).when(postService).deleteOwnPost(1L);
 
         mockMvc.perform(delete("/api/v1/posts/1"))
@@ -89,7 +89,7 @@ public class PostControllerTest {
     }
 
     @Test
-    void getAllRecentPosts_shouldCorrectlyGetAllPosts() throws Exception {
+    void getAllRecentPosts_shouldReturnPostPage() throws Exception {
         PageResponse<PostDtoSimple> response = PageResponse.<PostDtoSimple>builder()
                 .content(List.of(PostDtoSimple.builder()
                         .id(1L)
@@ -114,7 +114,7 @@ public class PostControllerTest {
     }
 
     @Test
-    void getPost_shouldCorrectlyGetPost() throws Exception {
+    void getPost_shouldReturnPost() throws Exception {
         PostDto response = PostDto.builder()
                 .id(1L)
                 .title("tittle")
@@ -133,7 +133,7 @@ public class PostControllerTest {
     }
 
     @Test
-    void getPost_shouldThrowException_whenPostDoesNotExists() throws Exception {
+    void getPost_shouldReturnNotFound_whenPostDoesNotExists() throws Exception {
         doThrow(new PostNotFoundException()).when(postService).findPostDtoById(1L);
 
         mockMvc.perform(get("/api/v1/posts/1"))
