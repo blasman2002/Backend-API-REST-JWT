@@ -45,7 +45,7 @@ public class PostControllerTest {
     private JwtService jwtService;
 
     @Test
-    void createPost_shouldReturnDto() throws Exception {
+    void createPost_shouldReturnCreatedAndPostDto() throws Exception {
         CreatePostRequest request = CreatePostRequest.builder()
                 .title("title")
                 .content("content")
@@ -95,22 +95,22 @@ public class PostControllerTest {
                         .id(1L)
                         .title("tittle")
                         .build()))
-                .page(1)
+                .page(0)
                 .size(10)
                 .totalPages(1)
                 .build();
 
-        when(postService.showAllRecentPosts(1,10)).thenReturn(response);
+        when(postService.showAllRecentPosts(0,10)).thenReturn(response);
 
-        mockMvc.perform(get("/api/v1/posts").param("page", "1").param("size", "10"))
+        mockMvc.perform(get("/api/v1/posts").param("page", "0").param("size", "10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.page").value(1))
+                .andExpect(jsonPath("$.page").value(0))
                 .andExpect(jsonPath("$.size").value(10))
                 .andExpect(jsonPath("$.totalPages").value(1))
                 .andExpect(jsonPath("$.content[0].id").value(1L))
                 .andExpect(jsonPath("$.content[0].title").value("tittle"));
 
-        verify(postService).showAllRecentPosts(1, 10);
+        verify(postService).showAllRecentPosts(0, 10);
     }
 
     @Test
