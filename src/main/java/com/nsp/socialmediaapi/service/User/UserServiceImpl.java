@@ -34,9 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserProfileDto findUserProfile(Long id) {
-        User user = userRepository.findById(id).orElseThrow(
-                UserNotFoundException::new
-        );
+        User user = findById(id);
 
         Long starsCount = starRepository.countByUser2_Id(user.getId());
 

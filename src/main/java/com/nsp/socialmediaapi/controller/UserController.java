@@ -32,6 +32,8 @@ public class UserController {
         return ResponseEntity.ok(postService.showUserPosts(id, page, size));
     }
 
+    //No tests for this method right now, will change logic later...
+
     @DeleteMapping("me")
     public ResponseEntity<?> deleteUserSelf() {
         userService.deleteUserSelf();
