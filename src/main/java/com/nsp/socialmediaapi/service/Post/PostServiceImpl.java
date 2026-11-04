@@ -118,9 +118,7 @@ public class PostServiceImpl implements PostService {
     @PreAuthorize("hasRole('ADMIN') and @userSecurityService.isActive(authentication)")
     @Transactional
     public void deletePostFromUser(Long id) {
-        Post post = postRepository.findById(id).orElseThrow(
-                PostNotFoundException::new
-        );
+        Post post = findById(id);
 
         postRepository.delete(post);
     }
