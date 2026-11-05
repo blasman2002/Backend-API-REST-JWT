@@ -5,6 +5,7 @@ import com.nsp.socialmediaapi.model.request.Post.CreatePostRequest;
 import com.nsp.socialmediaapi.model.dto.Post.PostDto;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
 import com.nsp.socialmediaapi.service.Post.PostService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,11 +19,13 @@ public class PostController {
 
     private final PostService postService;
 
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping()
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody CreatePostRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.createPost(request));
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("{id}")
     public ResponseEntity<?> deleteOwnPost(@PathVariable Long id) {
         postService.deleteOwnPost(id);

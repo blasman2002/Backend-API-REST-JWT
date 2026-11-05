@@ -5,6 +5,7 @@ import com.nsp.socialmediaapi.model.dto.Login.LoginResponseDto;
 import com.nsp.socialmediaapi.model.request.Login.RefreshTokenRequest;
 import com.nsp.socialmediaapi.model.request.User.CreateUserRequest;
 import com.nsp.socialmediaapi.service.Auth.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,18 +19,21 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Operation(summary = "Register a new account")
     @PostMapping("register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody CreateUserRequest request) {
         authService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body("account created.");
     }
 
+    @Operation(summary = "Login with registered account")
     @PostMapping("login")
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto request) {
         LoginResponseDto response = authService.login(request);
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Refresh authentication tokens")
     @PostMapping("refresh")
     public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
         LoginResponseDto response = authService.refreshToken(request);

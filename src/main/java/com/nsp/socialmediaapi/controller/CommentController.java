@@ -4,6 +4,7 @@ import com.nsp.socialmediaapi.model.dto.Comment.CommentDto;
 import com.nsp.socialmediaapi.model.request.Comment.CommentPostRequest;
 import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.service.Comment.CommentService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,11 +18,13 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("{id}/comments")
     public ResponseEntity<CommentDto> commentPost(@PathVariable Long id, @Valid @RequestBody CommentPostRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.commentPost(id, request));
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("{postId}/comments/{commentId}")
     public ResponseEntity<?> deleteCommentFromPost(@PathVariable Long postId, @PathVariable Long commentId) {
         commentService.deleteCommentFromPost(postId, commentId);

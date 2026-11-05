@@ -63,6 +63,14 @@ public class SecurityConfig {
                                 "/api/v1/posts/**"
                         )
                         .permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**"
+                        )
+                        .permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs*/**"
+                        )
+                        .permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(

@@ -1,6 +1,7 @@
 package com.nsp.socialmediaapi.controller;
 
 import com.nsp.socialmediaapi.service.Like.LikeService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +14,14 @@ public class LikeController {
 
     private final LikeService likeService;
 
+    @SecurityRequirement(name = "bearerAuth")
     @PostMapping("{id}/likes")
     public ResponseEntity<?> giveLike(@PathVariable Long id) {
         likeService.giveLikeToPost(id);
         return ResponseEntity.status(HttpStatus.CREATED).body("like given");
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @DeleteMapping("{id}/likes")
     public ResponseEntity<?> deleteLike(@PathVariable Long id) {
         likeService.removeLikeFromPost(id);
