@@ -1,4 +1,4 @@
-*HOW TO RUN PROJECT:
+<h2> *HOW TO RUN PROJECT: </h2>
 
 to run this project first your need:  
 -Docker desktop  
@@ -6,11 +6,11 @@ to run this project first your need:
 
 You do not need to install Java, Maven, or MySQL locally, as all services run inside Docker containers.
 
-1. Clone repository
+**1. Clone repository**
 
 "git clone https://github.com/blasman2002/Backend-API-REST-JWT cd Backend-API-REST-JWT"
 
-2. Configure environment variables
+**2. Configure environment variables**
 
 Create a .env file in the project root directory, alongside compose.yml.
 
@@ -25,7 +25,7 @@ JWT_SECRET=your_jwt_secret
 -Replace example variables with your own credentials.   
 -JWT_SECRET must contain a secure key compatible with the application JWT configuration (Base64 key).
 
-3. Build and start services:
+**3. Build and start services:**
 
 from the project root directory, run:
 
@@ -36,13 +36,13 @@ this command builds the Spring Boot application image and starts the following s
 -Spring boot API - Port 8092    
 -MySql - Port 3307
 
-4. Verify container status
+**4. Verify container status**
 
 "docker compose ps"
 
 both services should display UP status, MySQL should display healthy.
 
-5. Access the application
+**5. Access the application**
 
 once the services are running, you can access:
 
