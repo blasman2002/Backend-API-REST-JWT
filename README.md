@@ -1,4 +1,4 @@
-<h2> *HOW TO RUN PROJECT: </h2>
+<h2> *HOW TO RUN PROJECT: </h2>  
 
 to run this project first your need:  
 -Docker desktop  
