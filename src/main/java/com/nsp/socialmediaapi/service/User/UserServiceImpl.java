@@ -53,11 +53,9 @@ public class UserServiceImpl implements UserService {
     public void deleteUserSelf() {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        User user = userRepository.findByUsername(currentUsername).orElseThrow(
-                UserNotFoundException::new
-        );
+        User user = findByUsername(currentUsername);
 
-        userRepository.delete(user);
+        user.setStatus(Status.DISABLED);
     }
 
     //ADMIN USER

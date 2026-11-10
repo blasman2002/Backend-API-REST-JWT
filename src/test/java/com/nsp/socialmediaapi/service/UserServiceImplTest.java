@@ -3,8 +3,6 @@ package com.nsp.socialmediaapi.service;
 import com.nsp.socialmediaapi.exception.AlreadyExistsExceptions.UserAlreadyBannedException;
 import com.nsp.socialmediaapi.exception.InvalidArgumentExceptions.SelfBanNotAllowedException;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
-import com.nsp.socialmediaapi.mapper.UserMapper;
-import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
 import com.nsp.socialmediaapi.model.enm.Role;
 import com.nsp.socialmediaapi.model.enm.Status;
 import com.nsp.socialmediaapi.model.entity.User;
@@ -31,9 +29,6 @@ public class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private UserMapper userMapper;
-
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -56,13 +51,6 @@ public class UserServiceImplTest {
             .username("admin2000")
             .role(Role.ADMIN)
             .status(Status.ACTIVE)
-            .build();
-
-    public UserProfileDto USER_PROFILE_PREPARED = UserProfileDto.builder()
-            .id(1L)
-            .username("username2000")
-            .userDesc("bla bla bla")
-            .starsCount(32L)
             .build();
 
     private void setAuthenticatedUser(User u) {
@@ -128,31 +116,6 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void deleteUserSelf_shouldDeleteUser() {
-        setAuthenticatedUser(USER_PREPARED);
-
-        when(userRepository.findByUsername(USER_PREPARED.getUsername())).thenReturn(Optional.of(USER_PREPARED));
-
-        userService.deleteUserSelf();
-
-        verify(userRepository).delete(USER_PREPARED);
-    }
-
-    @Test
-    void deleteUserSelf_shouldThrowException_whenUserNotFound() {
-        setAuthenticatedUser(USER_PREPARED);
-
-        when(userRepository.findByUsername(USER_PREPARED.getUsername())).thenReturn(Optional.empty());
-
-        assertThrows(
-                UserNotFoundException.class,
-                () -> userService.deleteUserSelf()
-        );
-
-        verify(userRepository, never()).delete(any(User.class));
-    }
-
-    @Test
     void banUser_shouldSuccessfullyBanUser() {
         setAuthenticatedUser(ADMIN_PREPARED);
 
@@ -199,6 +162,31 @@ public class UserServiceImplTest {
                 () -> userService.banUser(2L)
         );
 
+    }
+
+    @Test
+    void deleteUserSelf_shouldCorrectlyChangeAccountStatus() {
+        setAuthenticatedUser(USER_PREPARED);
+
+        when(userRepository.findByUsername(USER_PREPARED.getUsername())).thenReturn(Optional.of(USER_PREPARED));
+
+        userService.deleteUserSelf();
+
+        assertEquals(Status.DISABLED, USER_PREPARED.getStatus());
+    }
+
+    @Test
+    void deleteUserSelf_shouldThrowException_whenUserNotFound() {
+        setAuthenticatedUser(USER_PREPARED);
+
+        when(userRepository.findByUsername(USER_PREPARED.getUsername())).thenReturn(Optional.empty());
+
+        assertThrows(
+                UserNotFoundException.class,
+                () -> userService.deleteUserSelf()
+        );
+
+        verify(userRepository, never()).delete(any(User.class));
     }
 
 }

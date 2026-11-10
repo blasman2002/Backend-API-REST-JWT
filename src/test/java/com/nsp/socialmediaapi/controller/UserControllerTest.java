@@ -21,8 +21,8 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -109,6 +109,15 @@ public class UserControllerTest {
 
         mockMvc.perform(get("/api/v1/users/1/posts").param("page", "0").param("size", "10"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteUserSelf_shouldReturnOkAndMessage() throws Exception {
+        doNothing().when(userService).deleteUserSelf();
+
+        mockMvc.perform(patch("/api/v1/users/me"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Account has been successfully disabled."));
     }
 
 }
