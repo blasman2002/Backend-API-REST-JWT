@@ -1,6 +1,7 @@
 package com.nsp.socialmediaapi.config;
 
 import com.nsp.socialmediaapi.filter.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -72,6 +73,10 @@ public class SecurityConfig {
                         )
                         .permitAll()
                         .anyRequest().authenticated()
+                ).exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) ->
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+                        )
                 )
                 .addFilterBefore(
                         jwtAuthenticationFilter,
