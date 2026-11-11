@@ -20,4 +20,12 @@ public class UserSecurityService {
         return user.getStatus() == Status.ACTIVE;
     }
 
+    public boolean isActiveOrBanned(Authentication authentication) {
+        String username = authentication.getName();
+
+        User user = userService.findByUsername(username);
+
+        return user.getStatus() != Status.DISABLED;
+    }
+
 }

@@ -9,6 +9,7 @@ import com.nsp.socialmediaapi.model.enm.Status;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.StarRepository;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
+import com.nsp.socialmediaapi.model.request.User.UpdateUserProfileInfoRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,6 +57,17 @@ public class UserServiceImpl implements UserService {
         User user = findByUsername(currentUsername);
 
         user.setStatus(Status.DISABLED);
+    }
+
+    @Override
+    @PreAuthorize("@userSecurityService.isActiveOrBanned(authentication)")
+    @Transactional
+    public void updateUserInfo(UpdateUserProfileInfoRequest request) {
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = findByUsername(currentUsername);
+
+        user.setUserDesc(request.getNewUserDesc());
     }
 
     //ADMIN USER

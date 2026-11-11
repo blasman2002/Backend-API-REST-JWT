@@ -1,6 +1,7 @@
 package com.nsp.socialmediaapi.security.service;
 
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
+import com.nsp.socialmediaapi.model.request.User.UpdateUserProfileInfoRequest;
 import com.nsp.socialmediaapi.service.User.UserSecurityService;
 import com.nsp.socialmediaapi.service.User.UserService;
 import org.junit.jupiter.api.Test;
@@ -59,5 +60,34 @@ public class UserServiceSecurityTest {
         );
     }
 
+    @Test
+    @WithMockUser(username = "user", roles = "USER")
+    void updateUserInfo_shouldSuccessfullyAccess_whenUserIsActiveOrBanned() {
+        when(userSecurityService.isActiveOrBanned(any(Authentication.class))).thenReturn(true);
+
+        UpdateUserProfileInfoRequest request = UpdateUserProfileInfoRequest.builder()
+                .newUserDesc("desc")
+                .build();
+
+        assertThrows(
+                UserNotFoundException.class,
+                () -> userService.updateUserInfo(request)
+        );
+    }
+
+    @Test
+    @WithMockUser(username = "user", roles = "USER")
+    void updateUserInfo_shouldThrowException_whenUserIsInactive() {
+        when(userSecurityService.isActiveOrBanned(any(Authentication.class))).thenReturn(false);
+
+        UpdateUserProfileInfoRequest request = UpdateUserProfileInfoRequest.builder()
+                .newUserDesc("desc")
+                .build();
+
+        assertThrows(
+                AuthorizationDeniedException.class,
+                () -> userService.updateUserInfo(request)
+        );
+    }
 
 }

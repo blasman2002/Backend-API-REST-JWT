@@ -1,11 +1,13 @@
 package com.nsp.socialmediaapi.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nsp.socialmediaapi.exception.ExceptionResponseBuilder;
 import com.nsp.socialmediaapi.exception.NotFoundExceptions.UserNotFoundException;
 import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
 import com.nsp.socialmediaapi.model.dto.User.UserDisplayDto;
 import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
+import com.nsp.socialmediaapi.model.request.User.UpdateUserProfileInfoRequest;
 import com.nsp.socialmediaapi.service.Auth.JwtService;
 import com.nsp.socialmediaapi.service.Post.PostService;
 import com.nsp.socialmediaapi.service.User.UserService;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,6 +34,9 @@ public class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockitoBean
     private UserService userService;
@@ -118,6 +124,33 @@ public class UserControllerTest {
         mockMvc.perform(patch("/api/v1/users/me"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Account has been successfully disabled."));
+    }
+
+    @Test
+    void updateProfileInfo_shouldReturnOkAndMessage() throws Exception {
+        UpdateUserProfileInfoRequest request = UpdateUserProfileInfoRequest.builder()
+                .newUserDesc("new description")
+                .build();
+
+        mockMvc.perform(patch("/api/v1/users/me/profile")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("profile updated."));
+    }
+
+    @Test
+    void updateProfileInfo_shouldReturnNotFound_whenUserNotFound() throws Exception {
+        UpdateUserProfileInfoRequest request = UpdateUserProfileInfoRequest.builder()
+                .newUserDesc("new description")
+                .build();
+
+        doThrow(new UserNotFoundException()).when(userService).updateUserInfo(any(UpdateUserProfileInfoRequest.class));
+
+        mockMvc.perform(patch("/api/v1/users/me/profile")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isNotFound());
     }
 
 }

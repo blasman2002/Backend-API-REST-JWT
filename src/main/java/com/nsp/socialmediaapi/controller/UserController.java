@@ -3,9 +3,11 @@ package com.nsp.socialmediaapi.controller;
 import com.nsp.socialmediaapi.model.dto.Page.PageResponse;
 import com.nsp.socialmediaapi.model.dto.Post.PostDtoSimple;
 import com.nsp.socialmediaapi.model.dto.User.UserProfileDto;
+import com.nsp.socialmediaapi.model.request.User.UpdateUserProfileInfoRequest;
 import com.nsp.socialmediaapi.service.Post.PostService;
 import com.nsp.socialmediaapi.service.User.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,13 @@ public class UserController {
             @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(postService.showUserPosts(id, page, size));
+    }
+
+    @SecurityRequirement(name = "bearerAuth")
+    @PatchMapping("me/profile")
+    public ResponseEntity<?> updateProfileInfo(@Valid @RequestBody UpdateUserProfileInfoRequest request) {
+        userService.updateUserInfo(request);
+        return ResponseEntity.ok("profile updated.");
     }
 
     @SecurityRequirement(name = "bearerAuth")

@@ -7,6 +7,7 @@ import com.nsp.socialmediaapi.model.enm.Role;
 import com.nsp.socialmediaapi.model.enm.Status;
 import com.nsp.socialmediaapi.model.entity.User;
 import com.nsp.socialmediaapi.model.repository.UserRepository;
+import com.nsp.socialmediaapi.model.request.User.UpdateUserProfileInfoRequest;
 import com.nsp.socialmediaapi.service.User.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +37,7 @@ public class UserServiceImplTest {
             .id(1L)
             .username("username2000")
             .role(Role.USER)
+            .userDesc("description")
             .status(Status.ACTIVE)
             .build();
 
@@ -187,6 +189,39 @@ public class UserServiceImplTest {
         );
 
         verify(userRepository, never()).delete(any(User.class));
+    }
+
+    @Test
+    void updateUserInfo_shouldCorrectlyUpdateUserInfo() {
+        setAuthenticatedUser(USER_PREPARED);
+
+        UpdateUserProfileInfoRequest request = UpdateUserProfileInfoRequest.builder()
+                .newUserDesc("new description")
+                .build();
+
+        when(userRepository.findByUsername(USER_PREPARED.getUsername())).thenReturn(Optional.of(USER_PREPARED));
+
+        userService.updateUserInfo(request);
+
+        assertEquals(request.getNewUserDesc(), USER_PREPARED.getUserDesc());
+
+        verify(userRepository).findByUsername(USER_PREPARED.getUsername());
+    }
+
+    @Test
+    void updateUserInfo_shouldThrowException_whenUserNotFound() {
+        setAuthenticatedUser(USER_PREPARED);
+
+        UpdateUserProfileInfoRequest request = UpdateUserProfileInfoRequest.builder()
+                .newUserDesc("new description")
+                .build();
+
+        when(userRepository.findByUsername(USER_PREPARED.getUsername())).thenReturn(Optional.empty());
+
+        assertThrows(
+                UserNotFoundException.class,
+                () -> userService.updateUserInfo(request)
+        );
     }
 
 }

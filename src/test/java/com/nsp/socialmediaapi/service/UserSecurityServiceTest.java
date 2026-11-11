@@ -63,4 +63,58 @@ public class UserSecurityServiceTest {
         verify(userService).findByUsername("username2000");
     }
 
+    @Test
+    void isActiveOrBanned_shouldReturnTrue_whenUserIsActive() {
+        User user = User.builder()
+                .username("username2000")
+                .status(Status.ACTIVE)
+                .build();
+
+        when(authentication.getName()).thenReturn("username2000");
+        when(userService.findByUsername("username2000")).thenReturn(user);
+
+        boolean result = userSecurityService.isActiveOrBanned(authentication);
+
+        assertTrue(result);
+
+        verify(authentication).getName();
+        verify(userService).findByUsername("username2000");
+    }
+
+    @Test
+    void isActiveOrBanned_shouldReturnTrue_whenUserIsBanned() {
+        User user = User.builder()
+                .username("username2000")
+                .status(Status.BANNED)
+                .build();
+
+        when(authentication.getName()).thenReturn("username2000");
+        when(userService.findByUsername("username2000")).thenReturn(user);
+
+        boolean result = userSecurityService.isActiveOrBanned(authentication);
+
+        assertTrue(result);
+
+        verify(authentication).getName();
+        verify(userService).findByUsername("username2000");
+    }
+
+    @Test
+    void isActiveOrBanned_shouldReturnFalse_whenUserIsDisabled() {
+        User user = User.builder()
+                .username("username2000")
+                .status(Status.DISABLED)
+                .build();
+
+        when(authentication.getName()).thenReturn("username2000");
+        when(userService.findByUsername("username2000")).thenReturn(user);
+
+        boolean result = userSecurityService.isActiveOrBanned(authentication);
+
+        assertFalse(result);
+
+        verify(authentication).getName();
+        verify(userService).findByUsername("username2000");
+    }
+
 }
