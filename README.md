@@ -41,11 +41,11 @@ You do not need to install Java, Maven, or MySQL locally, as all services run in
 
 **1. Clone repository**
 
-"git clone https://github.com/blasman2002/Backend-API-REST-JWT.git cd Backend-API-REST-JWT"
+"git clone https://github.com/blasman2002/Socialmedia-API-REST-JWT.git cd Socialmedia-API-REST-JWT"
 
 **2. Configure environment variables**
 
-Create a .env file in the project root directory, alongside compose.yml.
+Create a .env file in the project root directory, alongside compose.yaml.
 
 Add the following variables:
 
