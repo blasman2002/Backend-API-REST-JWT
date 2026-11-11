@@ -69,10 +69,10 @@ public class AuthService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             return jwtService.generateTokenResponse(authentication);
-        } catch (DisabledException e) {
-            throw new UserDisabledException();
         } catch (BadCredentialsException e) {
             throw new InvalidLoginCredentialsException();
+        } catch (DisabledException e) {
+            throw new UserDisabledException();
         }
     }
 
